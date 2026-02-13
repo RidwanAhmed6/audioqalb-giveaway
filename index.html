@@ -6,7 +6,7 @@
   <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'/>
   <meta content='true' name='HandheldFriendly'/>
   <meta content='yes' name='apple-mobile-web-app-capable'/>
-  <title>AudioQalb গিভওয়ে লাইভ | ৫০টি প্রশ্ন | ১ ঘন্টা</title>
+  <title>AudioQalb গিভওয়ে লাইভ | ১৫০টি প্রশ্ন | ১ ঘন্টা</title>
   <!-- Google Fonts & Font Awesome -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -26,8 +26,15 @@
     .question-area { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.25); border-radius: 40px; margin: 10px 0; padding: 20px; border: 1px solid rgba(255,215,0,0.2); min-height: 0; }
     .question-text { font-size: 36px; font-weight: 900; line-height: 1.4; text-align: center; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); word-break: break-word; animation: fadeSlide 0.8s ease; }
     .question-english { font-size: 24px; font-weight: 500; color: #ffd700; margin-top: 10px; font-family: 'Inter', sans-serif; opacity: 0.9; }
-    .options-row { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; margin: 15px 0; flex-shrink: 0; }
-    @media screen and (min-width: 768px) and (orientation: landscape) { .options-row { grid-template-columns: repeat(3, 1fr); } }
+    /* সব অবস্থায় ৩ কলাম */
+    .options-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; margin: 15px 0; flex-shrink: 0; }
+    /* ছোট স্ক্রিনে ফন্ট সাইজ কমিয়ে অ্যাডজাস্ট */
+    @media screen and (max-width: 600px) {
+      .options-row { gap: 8px; }
+      .option-card { font-size: 18px; padding: 10px 5px; }
+      .option-bn i { font-size: 20px; }
+      .option-en { font-size: 14px; }
+    }
     .option-card { background: linear-gradient(145deg, #16202e, #0c111b); border: 2px solid rgba(255,215,0,0.3); border-radius: 30px; padding: 18px 12px; font-size: 24px; font-weight: 700; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 10px 0 #00000055, 0 0 30px rgba(0,0,0,0.5); transition: all 0.2s; text-shadow: 0 2px 5px black; }
     .option-bn { display: flex; align-items: center; gap: 12px; }
     .option-bn i { color: #ffd700; font-size: 28px; filter: drop-shadow(0 0 8px gold); }
@@ -50,110 +57,65 @@
     .subscribe-btn:hover { background: #cc0000; transform: scale(1.05); }
     .live-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; color: rgba(255,215,0,0.8); font-size: 20px; flex-shrink: 0; }
     @keyframes fadeSlide { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-    @media screen and (orientation: landscape) and (max-height: 500px) {
-      .live-container { padding: 12px 20px; border-radius: 0; }
-      .logo-img { width: 40px; height: 40px; }
-      .logo span { font-size: 24px; }
-      .day-badge { font-size: 18px; padding: 6px 16px; }
-      .question-text { font-size: 26px; }
-      .question-english { font-size: 18px; }
-      .option-card { font-size: 20px; padding: 10px; }
-      .option-en { font-size: 14px; }
-      .progress-circle { width: 70px; height: 70px; }
-      .inner-circle { width: 58px; height: 58px; }
-      .inner-circle span { font-size: 28px; }
-      .subscribe-btn { padding: 8px 20px; font-size: 20px; }
-      .watermark-logo { width: 150px; }
-    }
-    @media screen and (min-width: 1024px) and (orientation: landscape) {
-      .live-container { width: 95vw; height: 90vh; border-radius: 60px; padding: 30px 50px; }
-      .logo-img { width: 70px; height: 70px; }
-      .logo span { font-size: 48px; }
-      .day-badge { font-size: 32px; padding: 12px 32px; }
-      .question-text { font-size: 64px; }
-      .question-english { font-size: 32px; }
-      .option-card { font-size: 40px; padding: 30px 15px; }
-      .option-en { font-size: 24px; }
-      .progress-circle { width: 140px; height: 140px; }
-      .inner-circle { width: 118px; height: 118px; }
-      .inner-circle span { font-size: 58px; }
-      .timer-section { flex-direction: row; }
-      .subscribe-btn { padding: 18px 40px; font-size: 32px; }
-      .watermark-logo { width: 350px; }
-    }
-    @supports (padding: max(0px)) { .live-container { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); padding-bottom: max(16px, env(safe-area-inset-bottom)); } }
-    body, html { overflow: hidden; }
 
-    /* ----- গিভওয়ে স্পেসিফিক স্ক্রিন ----- */
+    /* ----- মারকি (স্ক্রলিং নিয়ম) ----- */
+    .marquee-container {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      background: #cc0000;
+      color: white;
+      padding: 10px 0;
+      border-top: 2px solid #ffd700;
+      border-bottom: 2px solid #ffd700;
+      z-index: 100;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-text {
+      display: inline-block;
+      animation: scroll 30s linear infinite;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .marquee-text i {
+      color: #ffd700;
+      margin: 0 15px;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ----- শেষ স্ক্রিন ----- */
     .screen { display: none; flex-direction: column; height: 100%; width: 100%; }
     .screen.active { display: flex; }
-    .rules-content, .end-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-    .rules-title, .end-title { font-size: 56px; color: #ffd700; margin-bottom: 30px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
-    .rules-list { font-size: 32px; line-height: 2.2; max-width: 1000px; background: rgba(0,0,0,0.7); padding: 30px 50px; border-radius: 60px; border: 2px solid #ffd700; }
-    .rules-list i { color: #ffd700; margin-right: 15px; }
-    .countdown-timer { font-size: 48px; background: rgba(0,0,0,0.5); padding: 20px 40px; border-radius: 60px; border: 2px solid #ffd700; margin-top: 40px; }
+    .end-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+    .end-title { font-size: 56px; color: #ffd700; margin-bottom: 30px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
     .end-message { font-size: 36px; max-width: 1000px; line-height: 1.5; background: rgba(0,0,0,0.7); padding: 40px; border-radius: 60px; border: 2px solid #ffd700; }
     .next-countdown { font-size: 48px; margin-top: 40px; padding: 20px 40px; background: rgba(0,0,0,0.5); border-radius: 60px; border: 2px solid #ffd700; }
-    .pin-comment { position: fixed; bottom: 20px; left: 20px; right: 20px; background: #cc0000; backdrop-filter: blur(10px); border: 2px solid #ffd700; border-radius: 40px; padding: 10px 20px; text-align: center; font-size: 18px; z-index: 100; color: white; }
-    .pin-comment i { color: #ffd700; margin-right: 8px; }
-    .pin-comment a { color: #ffd700; text-decoration: underline; font-weight: bold; }
-    .pin-comment a:hover { color: white; }
-
-    /* ----- ওভারলে স্টার্ট বাটন ----- */
-    .start-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9);
-      backdrop-filter: blur(15px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      transition: opacity 1s ease;
-    }
-    .start-btn {
-      background: #ff0000;
-      border: 4px solid #ffd700;
-      color: white;
-      padding: 30px 70px;
-      border-radius: 100px;
-      font-size: 56px;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 0 60px rgba(255,215,0,0.5);
-      display: flex;
-      gap: 20px;
-      align-items: center;
-      transition: transform 0.3s;
-    }
-    .start-btn:hover { transform: scale(1.1); }
-    .start-btn i { font-size: 64px; }
 
     @media (max-width: 768px) {
-      .rules-title { font-size: 40px; }
-      .rules-list { font-size: 24px; padding: 20px; }
-      .countdown-timer { font-size: 32px; }
       .end-title { font-size: 40px; }
       .end-message { font-size: 24px; padding: 20px; }
       .next-countdown { font-size: 28px; }
-      .start-btn { font-size: 36px; padding: 20px 40px; }
-      .start-btn i { font-size: 40px; }
+      .marquee-text { font-size: 18px; }
     }
   </style>
 </head>
 <body>
   <!-- স্টার্ট ওভারলে -->
-  <div id="startOverlay" class="start-overlay">
-    <button id="startBtn" class="start-btn">
-      <i class="fas fa-play"></i> লাইভ শুরু করুন
+  <div id="startOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); backdrop-filter:blur(15px); display:flex; align-items:center; justify-content:center; z-index:10000; transition:opacity 1s ease;">
+    <button id="startBtn" style="background:#ff0000; border:4px solid #ffd700; color:white; padding:30px 70px; border-radius:100px; font-size:56px; font-weight:900; cursor:pointer; box-shadow:0 0 60px rgba(255,215,0,0.5); display:flex; gap:20px; align-items:center;">
+      <i class="fas fa-play" style="font-size:64px;"></i> লাইভ শুরু করুন
     </button>
   </div>
 
   <img src="https://github.com/RidwanAhmed6/yt-quiz/blob/main/IMG_1067.png?raw=true" alt="AudioQalb Logo" class="watermark-logo">
 
 <div class="live-container">
-  <!-- হেডার (সকল স্ক্রিনে কমন) -->
+  <!-- হেডার -->
   <div class="live-header">
     <div class="logo">
       <img src="https://github.com/RidwanAhmed6/yt-quiz/blob/main/IMG_1067.png?raw=true" alt="AudioQalb" class="logo-img">
@@ -165,26 +127,8 @@
     </div>
   </div>
 
-  <!-- স্ক্রিন ১: নিয়ম (প্রি-শো) -->
-  <div id="rulesScreen" class="screen active">
-    <div class="rules-content">
-      <h1 class="rules-title"><i class="fas fa-gift"></i> গিভওয়ে নিয়ম</h1>
-      <div class="rules-list">
-        <p><i class="fas fa-check-circle"></i> মোট ৫০টি কুইজ – ১ ঘন্টা লাইভ</p>
-        <p><i class="fas fa-check-circle"></i> উত্তর দিতে হবে ফর্মে (নিচে লিংক দেওয়া)</p>
-        <p><i class="fas fa-check-circle"></i> সঠিক উত্তর দাতাদের মধ্য থেকে ৩ জন বিজয়ী</p>
-        <p><i class="fas fa-check-circle"></i> পুরস্কার: ৫০০ টাকা মূল্যের টিশার্ট বান্ডেল</p>
-        <p><i class="fas fa-check-circle"></i> ফর্ম সাবমিটের শেষ সময়: রাত ৯টা (আজকের লাইভ)</p>
-        <p><i class="fas fa-check-circle"></i> একবারই ফর্ম সাবমিট করা যাবে</p>
-      </div>
-      <div class="countdown-timer">
-        <i class="fas fa-clock"></i> কুইজ শুরু হবে <span id="preCountdown">০২:০০</span> মিনিটে
-      </div>
-    </div>
-  </div>
-
-  <!-- স্ক্রিন ২: কুইজ চলছে -->
-  <div id="quizScreen" class="screen">
+  <!-- কুইজ স্ক্রিন (সরাসরি) -->
+  <div id="quizScreen" class="screen active">
     <div class="question-area">
       <div class="question-text" id="question">প্রশ্ন লোড হচ্ছে…</div>
       <div class="question-english" id="questionEn"></div>
@@ -198,24 +142,24 @@
       <div class="circular-timer">
         <div class="progress-circle" id="progressCircle">
           <div class="inner-circle">
-            <span id="timerNumber">60</span>
+            <span id="timerNumber">20</span>
             <small>সেকেন্ড</small>
           </div>
         </div>
         <div class="shuffle-badge"><i class="fas fa-shuffle"></i> স্বয়ংক্রিয় শাফল</div>
       </div>
-      <div class="progress-text"><i class="fas fa-question-circle"></i> <span id="currentQ">1</span>/50</div>
+      <div class="progress-text"><i class="fas fa-question-circle"></i> <span id="currentQ">1</span>/150</div>
     </div>
   </div>
 
-  <!-- স্ক্রিন ৩: গিভওয়ে শেষ -->
+  <!-- শেষ স্ক্রিন -->
   <div id="endScreen" class="screen">
     <div class="end-content">
       <h1 class="end-title"><i class="fas fa-trophy"></i> আজকের গিভওয়ে শেষ</h1>
       <div class="end-message">
         <p>আপনার অংশগ্রহণের জন্য ধন্যবাদ!</p>
-        <p>সঠিক উত্তর দাতাদের মধ্য থেকে ৩ জন বিজয়ী ঘোষণা করা হবে।</p>
-        <p>ফর্ম সাবমিটের সময় শেষ: রাত ৯টা।</p>
+        <p>টপ ৩ ফ্যান শীঘ্রই ঘোষণা করা হবে।</p>
+        <p>ফর্ম জমার সময় শেষ: রাত ১০টা।</p>
         <p>আগামীকাল আবার লাইভে দেখা হবে ইনশাআল্লাহ।</p>
       </div>
       <div class="next-countdown" id="nextCountdown">
@@ -224,15 +168,17 @@
     </div>
   </div>
 
-  <!-- পিন কমেন্ট (ফর্ম লিংক) -->
-  <div class="pin-comment" id="pinComment">
-    <i class="fas fa-thumbtack"></i> ফর্ম লিংক: 
-    <a href="#" target="_blank" id="formLink">https://forms.gle/your-form-id</a>
-  </div>
-
   <div class="live-footer">
     <span><i class="fas fa-video"></i> YouTube Live 16:9</span>
     <span><i class="fas fa-star"></i> আসর (Day) সীট থেকে স্বয়ংক্রিয়</span>
+  </div>
+</div>
+
+<!-- মারকি নিয়মাবলি (ফুটারে) -->
+<div class="marquee-container">
+  <div class="marquee-text">
+    <i class="fas fa-gift"></i> গিভওয়ে নিয়ম: ১৫০টি কুইজ · টপ ৩ ফ্যান পাবেন পুরস্কার · ফর্ম জমা রাত ১০টা পর্যন্ত <i class="fas fa-star"></i> কমেন্টে সক্রিয় থাকুন!
+    <i class="fas fa-gift"></i> গিভওয়ে নিয়ম: ১৫০টি কুইজ · টপ ৩ ফ্যান পাবেন পুরস্কার · ফর্ম জমা রাত ১০টা পর্যন্ত <i class="fas fa-star"></i> কমেন্টে সক্রিয় থাকুন!
   </div>
 </div>
 
@@ -243,37 +189,36 @@
 
 <script>
   // ============================================
-  // AudioQalb গিভওয়ে লাইভ – ৫০ প্রশ্ন, ১ ঘন্টা
-  // পূর্বের Apps Script URL + স্টার্ট বাটন + সব নির্দেশনা
+  // AudioQalb গিভওয়ে লাইভ – ১৫০ প্রশ্ন, ১ ঘন্টা
+  // টাইমার ২০ সেকেন্ড, ৫০টি প্রশ্ন ৩ বার লুপ
   // ============================================
 
   // ---------- কনফিগারেশন ----------
-  const API_URL = "https://script.google.com/macros/s/AKfycbzOuyVqqahjf02keFaTgA-7O4lCfNZYnbFTs98VfLy_r-Qd5HwX-pZ5cXRsgyEy1NNWIQ/exec";
-  const TOTAL_QUESTIONS = 50;
-  const QUIZ_TIME_PER_QUESTION = 60; // সেকেন্ড
-  const RULES_DURATION = 120; // ২ মিনিট (স্টার্ট বাটন চাপার পর থেকে)
-  const FORM_DEADLINE = { hour: 21, minute: 0 }; // রাত ৯টা
-  const LIVE_START_HOUR = 19; // সন্ধ্যা ৭টা (আগামীকালের জন্য)
+  const API_URL = "https://script.google.com/macros/s/AKfycbyw0lNMLsO4lx7vGf6OPHz8Kai3prfoSn7rFH22kvhjouUXJTr528U_HUHeOxxFtSj3tA/exec";
+  const BASE_QUESTIONS = 50;          // মূল প্রশ্ন সংখ্যা
+  const LOOPS = 3;                    // কতবার লুপ হবে
+  const TOTAL_QUESTIONS = BASE_QUESTIONS * LOOPS; // ১৫০
+  const QUIZ_TIME_PER_QUESTION = 20;  // সেকেন্ড (২০)
+  const DELAY_NEXT = 2000;             // ২ সেকেন্ড বিরতি
+  const FORM_DEADLINE = { hour: 22, minute: 0 }; // রাত ১০টা
+  const LIVE_START_HOUR = 19;          // সন্ধ্যা ৭টা (আগামীকালের জন্য)
 
   // ---------- গ্লোবাল ভেরিয়েবল ----------
   let allQuizData = [];
-  let quizData = [];
+  let originalQuizData = [];            // API থেকে পাওয়া ৫০টি প্রশ্ন
+  let quizData = [];                    // ১৫০টি প্রশ্ন (৩ বার রিপিট)
   let currentIdx = 0;
   let timerInterval = null;
   let timeLeft = QUIZ_TIME_PER_QUESTION;
   let isAnswered = false;
   let correctAns = '';
-  let rulesTimer = RULES_DURATION;
-  let rulesInterval = null;
   let currentRamadanDay = 15;
 
   // DOM এলিমেন্ট
   const startOverlay = document.getElementById('startOverlay');
   const startBtn = document.getElementById('startBtn');
-  const rulesScreen = document.getElementById('rulesScreen');
   const quizScreen = document.getElementById('quizScreen');
   const endScreen = document.getElementById('endScreen');
-  const preCountdownSpan = document.getElementById('preCountdown');
   const questionEl = document.getElementById('question');
   const questionEnEl = document.getElementById('questionEn');
   const optA = document.getElementById('optA');
@@ -287,14 +232,9 @@
   const currentQSpan = document.getElementById('currentQ');
   const nextCountdownSpan = document.querySelector('#nextCountdown span');
   const asrDaySpan = document.getElementById('asrDay');
-  const formLink = document.getElementById('formLink');
   const audioEl = document.getElementById('backgroundAudio');
   const audioToggleBtn = document.querySelector('.audio-control button');
   const audioIcon = document.getElementById('audioIcon');
-
-  // ---------- ফর্ম লিংক সেট করুন ----------
-  formLink.href = '#'; // আপনার আসল ফর্ম লিংক দিন
-  formLink.innerText = 'ফর্ম লিংক (শীঘ্রই আসছে)';
 
   // ---------- API ফেচ ----------
   async function fetchQuizzes() {
@@ -309,33 +249,50 @@
         return;
       }
 
+      // 'day' কলাম আছে কিনা এবং ফিল্টার
       const hasDayColumn = allQuizData.length > 0 && allQuizData[0].hasOwnProperty('day');
       
       if (hasDayColumn) {
         const firstDay = parseInt(allQuizData[0].day);
         if (!isNaN(firstDay) && firstDay >= 1 && firstDay <= 30) currentRamadanDay = firstDay;
-        quizData = allQuizData.filter(q => parseInt(q.day) === currentRamadanDay);
-        if (quizData.length === 0) quizData = [...allQuizData];
+        originalQuizData = allQuizData.filter(q => parseInt(q.day) === currentRamadanDay);
+        if (originalQuizData.length === 0) originalQuizData = [...allQuizData];
       } else {
-        quizData = [...allQuizData];
+        originalQuizData = [...allQuizData];
       }
 
-      if (quizData.length > TOTAL_QUESTIONS) {
-        quizData = quizData.slice(0, TOTAL_QUESTIONS);
+      // ৫০টি প্রশ্ন নিশ্চিত করা
+      if (originalQuizData.length > BASE_QUESTIONS) {
+        originalQuizData = originalQuizData.slice(0, BASE_QUESTIONS);
       }
 
       asrDaySpan.innerText = currentRamadanDay;
 
-      if (quizData.length) {
-        shuffleArray(quizData);
+      if (originalQuizData.length) {
+        // ১৫০টি প্রশ্ন তৈরি (৫০ * ৩)
+        buildQuizData();
+        shuffleArray(quizData);   // পুরো ১৫০টি এলোমেলো
         showQuestion(0);
-        // টাইমার এখনো শুরু হবে না, স্টার্ট বাটন চাপার পর শুরু হবে
+        // টাইমার শুরু হবে স্টার্ট বাটন চাপার পর
       } else {
         questionEl.innerText = '❌ কোনো কুইজ ডাটা নেই';
       }
     } catch (e) {
       console.error(e);
       questionEl.innerText = '⚠️ API সংযোগ ব্যর্থ, URL চেক করুন';
+    }
+  }
+
+  // ---------- ১৫০টি প্রশ্ন তৈরি (৫০ * ৩) ----------
+  function buildQuizData() {
+    quizData = [];
+    for (let round = 0; round < LOOPS; round++) {
+      // প্রতিটি রাউন্ডে ৫০টি প্রশ্ন (এলোমেলো না করে original ক্রমে)
+      // অথবা এলোমেলো করতে চাইলে originalQuizData এলোমেলো করে নিতে পারেন
+      // এখানে আমরা originalQuizData এলোমেলো করে প্রতিটি রাউন্ডে যোগ করছি
+      let shuffled = [...originalQuizData];
+      shuffleArray(shuffled);
+      quizData.push(...shuffled);
     }
   }
 
@@ -367,7 +324,7 @@
     correctAns = (q.correct || 'A').toUpperCase();
     removeHighlights();
     isAnswered = false;
-    currentQSpan.innerText = index + 1;
+    currentQSpan.innerText = (index + 1) + '/' + TOTAL_QUESTIONS;
   }
 
   function removeHighlights() {
@@ -394,7 +351,7 @@
       if (timeLeft <= 0) {
         clearInterval(timerInterval);
         showCorrectAnswer();
-        setTimeout(nextQuestion, 2000);
+        setTimeout(nextQuestion, DELAY_NEXT);
       }
     }, 1000);
   }
@@ -409,6 +366,7 @@
   function nextQuestion() {
     currentIdx++;
     if (currentIdx >= quizData.length) {
+      // সমস্ত প্রশ্ন শেষ
       showEndScreen();
       return;
     }
@@ -445,24 +403,21 @@
     setInterval(updateCountdown, 1000);
   }
 
-  // ---------- ফর্ম ডেডলাইন চেক ----------
+  // ---------- ফর্ম ডেডলাইন চেক (মারকিতে দেখানো হয় না, শুধু কনসোলে) ----------
   function checkFormDeadline() {
     const now = new Date();
     const deadline = new Date(now);
     deadline.setHours(FORM_DEADLINE.hour, FORM_DEADLINE.minute, 0, 0);
     if (now > deadline) {
-      formLink.style.pointerEvents = 'none';
-      formLink.style.opacity = 0.5;
-      formLink.innerText = 'ফর্ম বন্ধ (রাত ৯টা পেরিয়েছে)';
+      console.log('ফর্ম বন্ধ হয়ে গেছে');
     } else {
       const diff = deadline - now;
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      formLink.innerText = `ফর্ম খোলা (আর ${hours}ঘ ${minutes}মি)`;
+      console.log(`ফর্ম খোলা আছে আর ${hours}ঘ ${minutes}মি`);
     }
   }
   checkFormDeadline();
-  setInterval(checkFormDeadline, 60000);
 
   // ---------- অডিও কন্ট্রোল ----------
   if (audioToggleBtn) {
@@ -488,32 +443,14 @@
     // নাশিদ চালু
     audioEl.play().catch(e => console.log('Audio play failed:', e));
     
-    // নিয়ম কাউন্টডাউন শুরু
-    startRulesTimer();
+    // সরাসরি কুইজ শুরু (কোনো নিয়ম স্ক্রিন নেই)
+    startTimer();
   });
-
-  // ---------- নিয়ম কাউন্টডাউন ----------
-  function startRulesTimer() {
-    rulesInterval = setInterval(() => {
-      rulesTimer--;
-      if (rulesTimer <= 0) {
-        clearInterval(rulesInterval);
-        // কুইজ স্ক্রিন দেখাও
-        rulesScreen.classList.remove('active');
-        quizScreen.classList.add('active');
-        startTimer(); // টাইমার শুরু
-      } else {
-        const mins = Math.floor(rulesTimer / 60);
-        const secs = rulesTimer % 60;
-        preCountdownSpan.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-      }
-    }, 1000);
-  }
 
   // ---------- শুরুতে API কল ----------
   fetchQuizzes();
 
-  // পিন কমেন্ট সবসময় visible
+  // মারকি সবসময় visible
 </script>
 </body>
 </html>
