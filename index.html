@@ -248,7 +248,7 @@
   // ============================================
 
   // ---------- কনফিগারেশন ----------
-  const API_URL = "https://script.google.com/macros/s/AKfycbyw0lNMLsO4lx7vGf6OPHz8Kai3prfoSn7rFH22kvhjouUXJTr528U_HUHeOxxFtSj3tA/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzOuyVqqahjf02keFaTgA-7O4lCfNZYnbFTs98VfLy_r-Qd5HwX-pZ5cXRsgyEy1NNWIQ/exec";
   const TOTAL_QUESTIONS = 50;
   const QUIZ_TIME_PER_QUESTION = 60; // সেকেন্ড
   const RULES_DURATION = 120; // ২ মিনিট (স্টার্ট বাটন চাপার পর থেকে)
@@ -266,7 +266,6 @@
   let rulesTimer = RULES_DURATION;
   let rulesInterval = null;
   let currentRamadanDay = 15;
-  let quizStarted = false; // স্টার্ট বাটন চাপলে true হবে
 
   // DOM এলিমেন্ট
   const startOverlay = document.getElementById('startOverlay');
@@ -294,8 +293,8 @@
   const audioIcon = document.getElementById('audioIcon');
 
   // ---------- ফর্ম লিংক সেট করুন ----------
-  formLink.href = 'https://forms.gle/your-actual-form-id'; // আপনার আসল ফর্ম লিংক দিন
-  formLink.innerText = 'ফর্ম লিংক';
+  formLink.href = '#'; // আপনার আসল ফর্ম লিংক দিন
+  formLink.innerText = 'ফর্ম লিংক (শীঘ্রই আসছে)';
 
   // ---------- API ফেচ ----------
   async function fetchQuizzes() {
