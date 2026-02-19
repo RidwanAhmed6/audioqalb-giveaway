@@ -334,7 +334,7 @@
                 'https://images.unsplash.com/photo-1593941707882-a56bbc8a84d1?w=400'
             ];
             // অডিও ফাইল বেস URL (গিটহাব রেপো)
-            const audioBaseURL = 'https://github.com/yourusername/ramadan-audio/raw/main/'; // আপনার আসল লিংক দিন
+            const audioBaseURL = 'https://github.com/audioqalb-giveaway/quran-audio/raw/main/'; // আপনার আসল লিংক দিন
 
             // --------------------------------------------------------------
             // বিভাগ তালিকা ও অফসেট (মিনিট) – ঢাকার সাপেক্ষে
@@ -498,8 +498,8 @@
                     return;
                 }
                 // এখানে প্রকৃত অডিও ফাইল লোড করে প্লে করতে হবে
-                // audioPlayer.src = audioBaseURL + `para${day}.mp3`;
-                // audioPlayer.play();
+                 audioPlayer.src = audioBaseURL + `${day}.mp3`;
+                 audioPlayer.play();
                 alert('অডিও ফাইল গিটহাব থেকে লোড হবে। (নমুনা হিসেবে কাজ করছে না)');
             });
 
