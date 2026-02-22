@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>রমজান ২০২৬ - বাংলাদেশের বিভাগ</title>
+    <title>রমজান ২০২৬ - বাংলাদেশ</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,7 @@
             padding: 10px;
         }
 
-        /* আইফোন সাইজ ফিক্সড ফ্রেম */
+        /* আইফোন ফ্রেম */
         .iphone-frame {
             width: 375px;
             height: 667px;
@@ -32,17 +32,16 @@
             position: relative;
         }
 
-        /* স্ক্রোল কন্টেন্ট */
         .content {
             width: 100%;
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 18px 15px;
+            padding: 20px 15px;
             color: #f5e9da;
             position: relative;
             z-index: 5;
-            background: rgba(7, 17, 24, 0.8);
+            background: rgba(7, 17, 24, 0.95);
             scrollbar-width: thin;
             scrollbar-color: #ffb347 #0a1f2a;
         }
@@ -58,287 +57,217 @@
             border-radius: 8px;
         }
 
-        /* স্লাইডশো ব্যাকগ্রাউন্ড */
-        .slideshow-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            overflow: hidden;
-        }
-        .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            transition: opacity 1.8s ease-in-out;
-            filter: brightness(0.35);
-        }
-        .slide.active {
-            opacity: 1;
-        }
-
-        .islamic-pattern {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.08"><path d="M50 15 L58 40 L50 65 L42 40 Z" fill="%23ffaa33"/><circle cx="50" cy="45" r="12" fill="none" stroke="%23ffaa33" stroke-width="1.5"/></svg>');
-            background-size: 70px;
-            pointer-events: none;
-            z-index: 2;
-        }
-
         /* হেডার */
         .ramadan-header {
             text-align: center;
             background: rgba(0, 30, 30, 0.5);
-            backdrop-filter: blur(2px);
             border-radius: 50px;
             padding: 16px 5px;
             margin-bottom: 18px;
             border: 1.5px solid #f7c35c;
-            position: relative;
-            z-index: 10;
         }
         .ramadan-header h1 {
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             color: #ffdb9d;
         }
         .ramadan-header h2 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #ffffffcc;
         }
-        .bangla-date {
-            font-size: 1rem;
-            color: #f7c35c;
-            margin-top: 5px;
-        }
-
-        /* কাউন্টডাউন */
-        .counter-section {
-            background: rgba(0, 40, 40, 0.6);
-            backdrop-filter: blur(2px);
-            border-radius: 40px;
-            padding: 18px 15px;
-            margin-bottom: 18px;
-            border: 1.5px solid #f7c35c;
-            text-align: center;
-            z-index: 10;
-        }
-        .counter-title {
+        .ramadan-day {
             font-size: 1.2rem;
-            color: #ffdb9d;
-            margin-bottom: 12px;
-        }
-        .counter-grid {
-            display: flex;
-            justify-content: space-around;
-        }
-        .counter-block {
-            background: rgba(0,0,0,0.4);
-            padding: 8px 5px;
-            border-radius: 18px;
-            min-width: 55px;
-        }
-        .counter-number {
-            font-size: 1.5rem;
+            color: #f7c35c;
+            margin-top: 8px;
             font-weight: bold;
-            color: #ffb347;
-        }
-        .counter-label {
-            font-size: 0.75rem;
         }
 
-        /* বিভাগ টেবিল */
-        .divisions-section {
-            background: rgba(0, 35, 35, 0.6);
-            backdrop-filter: blur(2px);
-            border-radius: 30px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1.5px solid #f7c35c;
-            z-index: 10;
-            position: relative;
-        }
-        .section-title {
-            font-size: 1.3rem;
-            color: #ffdb9d;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        .divisions-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-        }
-        .divisions-table th {
-            background: #f7c35c;
-            color: #0a1a1a;
-            padding: 8px 3px;
-            position: sticky;
-            top: 0;
-            z-index: 15;
-        }
-        .divisions-table td {
-            padding: 8px 3px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,200,100,0.3);
-        }
-        .today-highlight {
-            background: rgba(255,200,100,0.25);
-        }
-        .divisions-container {
-            max-height: 240px; /* প্রায় ৮-১০ সারি দেখাবে */
-            overflow-y: auto;
-            border-radius: 15px;
-            margin-top: 5px;
-        }
-
-        /* কুরআন প্লেয়ার */
-        .quran-section {
-            background: rgba(20, 45, 45, 0.7);
-            backdrop-filter: blur(3px);
-            border-radius: 35px;
-            padding: 18px;
-            margin-bottom: 20px;
-            border: 1.5px solid #f7c35c;
-            z-index: 10;
-        }
-        .quran-header {
+        /* এক লাইনে ঘড়ি ও বাটন */
+        .live-row {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        .quran-header h3 {
-            font-size: 1.3rem;
+        .live-clock {
+            flex: 2;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 40px;
+            padding: 10px 8px;
+            text-align: center;
+            border: 1.5px solid #ffb347;
+        }
+        .clock-time {
+            font-size: 1.8rem;
+            font-weight: bold;
             color: #ffdb9d;
+            letter-spacing: 2px;
         }
-        .play-btn {
-            background: #ffb347;
+        .clock-date {
+            font-size: 0.8rem;
+            color: #ffb347;
+            margin-top: 2px;
+        }
+        .audio-control {
+            flex: 1;
+            text-align: center;
+        }
+        .audio-btn {
+            width: 100%;
+            background: #f7c35c;
             border: none;
             border-radius: 40px;
-            padding: 10px 20px;
+            padding: 12px 5px;
             font-weight: bold;
             color: #0a1f1f;
             font-size: 0.9rem;
             cursor: pointer;
             box-shadow: 0 2px 8px #ffb34780;
+            transition: 0.2s;
+            white-space: nowrap;
         }
-        .play-btn:active { transform: scale(0.96); }
-        .audio-player {
-            width: 100%;
-            margin: 12px 0;
+        .audio-btn:active { transform: scale(0.96); }
+
+        /* টেবিল সেকশন */
+        .table-section {
+            background: rgba(0, 35, 35, 0.6);
             border-radius: 30px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1.5px solid #f7c35c;
         }
-        .para-info {
-            font-size: 1.1rem;
+        .table-title {
+            font-size: 1.3rem;
+            color: #ffdb9d;
             text-align: center;
-            background: rgba(0,0,0,0.4);
-            padding: 10px;
-            border-radius: 40px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .schedule-msg {
-            font-size: 0.8rem;
+        .table-container {
+            overflow-x: auto;
+        }
+        .time-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .time-table th {
+            background: #f7c35c;
+            color: #0a1a1a;
+            padding: 8px 3px;
+        }
+        .time-table td {
+            padding: 8px 3px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,200,100,0.3);
+        }
+        .remaining-time {
+            font-weight: bold;
             color: #ffb347;
-            text-align: center;
-            margin-top: 8px;
         }
 
         /* ফুটার */
         .footer {
-            background: rgba(0, 25, 25, 0.6);
-            backdrop-filter: blur(2px);
-            border-radius: 40px;
-            padding: 15px;
             text-align: center;
-            font-size: 0.7rem;
-            border: 1.5px solid #f7c35c;
-            z-index: 10;
+            font-size: 0.65rem;
+            color: #ffdb9d;
+            margin-top: 5px;
         }
-        .footer p { margin: 3px 0; }
     </style>
 </head>
 <body>
     <div class="iphone-frame">
-        <!-- ব্যাকগ্রাউন্ড স্লাইডশো (গিটহাব ইমেজ) -->
-        <div class="slideshow-container" id="slideshow"></div>
-        <div class="islamic-pattern"></div>
-
-        <div class="content" id="mainContent">
+        <div class="content">
+            <!-- হেডার -->
             <div class="ramadan-header">
                 <h1>🌙 রমজান ২০২৬</h1>
                 <h2>বাংলাদেশের বিভাগ</h2>
-                <div class="bangla-date" id="banglaDate"></div>
+                <div class="ramadan-day" id="ramadanDay">আজ ১ম রমজান</div>
             </div>
 
-            <!-- কাউন্টডাউন -->
-            <div class="counter-section">
-                <div class="counter-title">রমজান শুরু হতে আর বাকি</div>
-                <div class="counter-grid" id="countdown">
-                    <div class="counter-block"><span class="counter-number" id="days">00</span><span class="counter-label">দিন</span></div>
-                    <div class="counter-block"><span class="counter-number" id="hours">00</span><span class="counter-label">ঘণ্টা</span></div>
-                    <div class="counter-block"><span class="counter-number" id="minutes">00</span><span class="counter-label">মিনিট</span></div>
-                    <div class="counter-block"><span class="counter-number" id="seconds">00</span><span class="counter-label">সেকেন্ড</span></div>
+            <!-- এক লাইনে ঘড়ি ও বাটন -->
+            <div class="live-row">
+                <div class="live-clock">
+                    <div class="clock-time" id="liveClock">--:--:--</div>
+                    <div class="clock-date" id="liveDate"></div>
+                </div>
+                <div class="audio-control">
+                    <button class="audio-btn" id="playAudioBtn">🔊 অডিও</button>
                 </div>
             </div>
 
-            <!-- সব বিভাগের সেহরি ও ইফতার (স্ক্রোল সহ টেবিল) -->
-            <div class="divisions-section">
-                <h3 class="section-title">🕌 বিভাগসমূহের সময়সূচি</h3>
-                <div class="divisions-container">
-                    <table class="divisions-table">
-                        <thead>
-                            <tr><th>বিভাগ</th><th>সেহরি শেষ</th><th>ইফতার</th></tr>
-                        </thead>
-                        <tbody id="divisionsTableBody"></tbody>
+            <!-- ইফতার টেবিল -->
+            <div class="table-section">
+                <div class="table-title">🌇 ইফতার</div>
+                <div class="table-container">
+                    <table class="time-table" id="iftarTable">
+                        <thead><tr><th>বিভাগ</th><th>বাকি সময়</th><th>ইফতার</th></tr></thead>
+                        <tbody id="iftarTableBody"></tbody>
                     </table>
                 </div>
-                <p style="font-size:0.65rem; text-align:center; margin-top:5px;">* সময় ইসলামিক ফাউন্ডেশন এর তথ্য অনুযায়ী আনুমানিক</p>
             </div>
 
-            <!-- কুরআন তেলাওয়াত প্লেয়ার (প্রতিদিন ১ পারা) -->
-            <div class="quran-section">
-                <div class="quran-header">
-                    <h3>📖 কুরআন তেলাওয়াত</h3>
-                    <button class="play-btn" id="playPauseBtn">▶ শুরু</button>
+            <!-- সেহরি টেবিল -->
+            <div class="table-section">
+                <div class="table-title">🌅 সেহরি শেষ</div>
+                <div class="table-container">
+                    <table class="time-table" id="sehriTable">
+                        <thead><tr><th>বিভাগ</th><th>বাকি সময়</th><th>সেহরি</th></tr></thead>
+                        <tbody id="sehriTableBody"></tbody>
+                    </table>
                 </div>
-                <div class="para-info" id="paraDisplay">আজকের পারা: ১</div>
-                <audio id="quranAudio" class="audio-player" controls preload="none"></audio>
-                <div class="schedule-msg" id="scheduleMsg">প্রতিদিন বিকাল ৪:০০ - ৫:০০ (স্বয়ংক্রিয়)</div>
             </div>
 
-            <!-- ফুটার -->
             <div class="footer">
                 <p>ইসলামিক ফাউন্ডেশন বাংলাদেশ এর তথ্য অনুযায়ী</p>
-                <p>ছবি ও অডিও: গিটহাব সংগ্রহ</p>
-                <p>© ২০২৬ - রমজান ক্যালেন্ডার</p>
+                <p>অডিও: গিটহাব সংগ্রহ</p>
             </div>
         </div>
     </div>
 
+    <audio id="bgAudio" loop preload="auto">
+        <source src="" type="audio/mpeg">
+    </audio>
+
     <script>
         (function() {
-            // --------------------------------------------------------------
-            // কনফিগারেশন (গিটহাব থেকে আপনার লিংক দিন)
-            // --------------------------------------------------------------
-            const backgroundImages = [
-                'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=400', // উদাহরণ, আপনার ইমেজ লিংক দিন
-                'https://images.unsplash.com/photo-1564769625905-50e93615e769?w=400',
-                'https://images.unsplash.com/photo-1583687347985-615c105e34c4?w=400',
-                'https://images.unsplash.com/photo-1519810755548-39cd217da494?w=400',
-                'https://images.unsplash.com/photo-1593941707882-a56bbc8a84d1?w=400'
+            // =============== ইউজারের দেওয়া ঢাকার সময়সূচী (AM/PM ফরম্যাটে রূপান্তরিত) ===============
+            const baseSchedule = [
+                { day:1, date:"১৯-০২-২০২৬", dayName:"বৃহস্পতিবার", sehri:"5:12 AM", iftar:"5:58 PM" },
+                { day:2, date:"২০-০২-২০২৬", dayName:"শুক্রবার", sehri:"5:11 AM", iftar:"5:58 PM" },
+                { day:3, date:"২১-০২-২০২৬", dayName:"শনিবার", sehri:"5:11 AM", iftar:"5:59 PM" },
+                { day:4, date:"২২-০২-২০২৬", dayName:"রবিবার", sehri:"5:10 AM", iftar:"5:59 PM" },
+                { day:5, date:"২৩-০২-২০২৬", dayName:"সোমবার", sehri:"5:09 AM", iftar:"6:00 PM" },
+                { day:6, date:"২৪-০২-২০২৬", dayName:"মঙ্গলবার", sehri:"5:08 AM", iftar:"6:00 PM" },
+                { day:7, date:"২৫-০২-২০২৬", dayName:"বুধবার", sehri:"5:08 AM", iftar:"6:01 PM" },
+                { day:8, date:"২৬-০২-২০২৬", dayName:"বৃহস্পতিবার", sehri:"5:07 AM", iftar:"6:01 PM" },
+                { day:9, date:"২৭-০২-২০২৬", dayName:"শুক্রবার", sehri:"5:06 AM", iftar:"6:02 PM" },
+                { day:10, date:"২৮-০২-২০২৬", dayName:"শনিবার", sehri:"5:05 AM", iftar:"6:02 PM" },
+                { day:11, date:"০১-০৩-২০২৬", dayName:"রবিবার", sehri:"5:05 AM", iftar:"6:03 PM" },
+                { day:12, date:"০২-০৩-২০২৬", dayName:"সোমবার", sehri:"5:04 AM", iftar:"6:03 PM" },
+                { day:13, date:"০৩-০৩-২০২৬", dayName:"মঙ্গলবার", sehri:"5:03 AM", iftar:"6:04 PM" },
+                { day:14, date:"০৪-০৩-২০২৬", dayName:"বুধবার", sehri:"5:02 AM", iftar:"6:04 PM" },
+                { day:15, date:"০৫-০৩-২০২৬", dayName:"বৃহস্পতিবার", sehri:"5:01 AM", iftar:"6:05 PM" },
+                { day:16, date:"০৬-০৩-২০২৬", dayName:"শুক্রবার", sehri:"5:00 AM", iftar:"6:05 PM" },
+                { day:17, date:"০৭-০৩-২০২৬", dayName:"শনিবার", sehri:"4:59 AM", iftar:"6:06 PM" },
+                { day:18, date:"০৮-০৩-২০২৬", dayName:"রবিবার", sehri:"4:58 AM", iftar:"6:06 PM" },
+                { day:19, date:"০৯-০৩-২০২৬", dayName:"সোমবার", sehri:"4:57 AM", iftar:"6:07 PM" },
+                { day:20, date:"১০-০৩-২০২৬", dayName:"মঙ্গলবার", sehri:"4:57 AM", iftar:"6:07 PM" },
+                { day:21, date:"১১-০৩-২০২৬", dayName:"বুধবার", sehri:"4:56 AM", iftar:"6:07 PM" },
+                { day:22, date:"১২-০৩-২০২৬", dayName:"বৃহস্পতিবার", sehri:"4:55 AM", iftar:"6:08 PM" },
+                { day:23, date:"১৩-০৩-২০২৬", dayName:"শুক্রবার", sehri:"4:54 AM", iftar:"6:08 PM" },
+                { day:24, date:"১৪-০৩-২০২৬", dayName:"শনিবার", sehri:"4:53 AM", iftar:"6:09 PM" },
+                { day:25, date:"১৫-০৩-২০২৬", dayName:"রবিবার", sehri:"4:52 AM", iftar:"6:09 PM" },
+                { day:26, date:"১৬-০৩-২০২৬", dayName:"সোমবার", sehri:"4:51 AM", iftar:"6:10 PM" },
+                { day:27, date:"১৭-০৩-২০২৬", dayName:"মঙ্গলবার", sehri:"4:50 AM", iftar:"6:10 PM" },
+                { day:28, date:"১৮-০৩-২০২৬", dayName:"বুধবার", sehri:"4:49 AM", iftar:"6:10 PM" },
+                { day:29, date:"১৯-০৩-২০২৬", dayName:"বৃহস্পতিবার", sehri:"4:48 AM", iftar:"6:11 PM" },
+                { day:30, date:"২০-০৩-২০২৬", dayName:"শুক্রবার", sehri:"4:47 AM", iftar:"6:11 PM" }
             ];
-            // অডিও ফাইল বেস URL (গিটহাব রেপো)
-            const audioBaseURL = 'https://github.com/audioqalb-giveaway/quran-audio/raw/main/'; // আপনার আসল লিংক দিন
 
-            // --------------------------------------------------------------
-            // বিভাগ তালিকা ও অফসেট (মিনিট) – ঢাকার সাপেক্ষে
-            // --------------------------------------------------------------
+            // বিভাগ ও অফসেট (মিনিট) – ঢাকার সাপেক্ষে
             const divisions = [
                 { name: 'ঢাকা', offsetSehri: 0, offsetIftar: 0 },
                 { name: 'চট্টগ্রাম', offsetSehri: -3, offsetIftar: -2 },
@@ -350,195 +279,118 @@
                 { name: 'ময়মনসিংহ', offsetSehri: 2, offsetIftar: 2 }
             ];
 
-            // --------------------------------------------------------------
-            // ঢাকার বেস সময়সূচি (৩০ দিন) – ইসলামিক ফাউন্ডেশন থেকে সংগ্রহিত
-            // --------------------------------------------------------------
-            const baseSchedule = [
-                { day:1, date:"19 ফেব্রুয়ারি", sehri:"5:11", iftar:"6:02" },
-                { day:2, date:"20 ফেব্রুয়ারি", sehri:"5:10", iftar:"6:03" },
-                { day:3, date:"21 ফেব্রুয়ারি", sehri:"5:09", iftar:"6:04" },
-                { day:4, date:"22 ফেব্রুয়ারি", sehri:"5:09", iftar:"6:04" },
-                { day:5, date:"23 ফেব্রুয়ারি", sehri:"5:09", iftar:"6:05" },
-                { day:6, date:"24 ফেব্রুয়ারি", sehri:"5:08", iftar:"6:05" },
-                { day:7, date:"25 ফেব্রুয়ারি", sehri:"5:07", iftar:"6:06" },
-                { day:8, date:"26 ফেব্রুয়ারি", sehri:"5:06", iftar:"6:06" },
-                { day:9, date:"27 ফেব্রুয়ারি", sehri:"5:05", iftar:"6:07" },
-                { day:10, date:"28 ফেব্রুয়ারি", sehri:"5:05", iftar:"6:07" },
-                { day:11, date:"1 মার্চ", sehri:"5:04", iftar:"6:08" },
-                { day:12, date:"2 মার্চ", sehri:"5:03", iftar:"6:08" },
-                { day:13, date:"3 মার্চ", sehri:"5:03", iftar:"6:09" },
-                { day:14, date:"4 মার্চ", sehri:"5:02", iftar:"6:09" },
-                { day:15, date:"5 মার্চ", sehri:"5:01", iftar:"6:09" },
-                { day:16, date:"6 মার্চ", sehri:"5:00", iftar:"6:10" },
-                { day:17, date:"7 মার্চ", sehri:"4:59", iftar:"6:10" },
-                { day:18, date:"8 মার্চ", sehri:"4:58", iftar:"6:11" },
-                { day:19, date:"9 মার্চ", sehri:"4:57", iftar:"6:11" },
-                { day:20, date:"10 মার্চ", sehri:"4:56", iftar:"6:12" },
-                { day:21, date:"11 মার্চ", sehri:"4:55", iftar:"6:12" },
-                { day:22, date:"12 মার্চ", sehri:"4:54", iftar:"6:13" },
-                { day:23, date:"13 মার্চ", sehri:"4:53", iftar:"6:13" },
-                { day:24, date:"14 মার্চ", sehri:"4:52", iftar:"6:14" },
-                { day:25, date:"15 মার্চ", sehri:"4:51", iftar:"6:14" },
-                { day:26, date:"16 মার্চ", sehri:"4:50", iftar:"6:15" },
-                { day:27, date:"17 মার্চ", sehri:"4:49", iftar:"6:15" },
-                { day:28, date:"18 মার্চ", sehri:"4:48", iftar:"6:15" },
-                { day:29, date:"19 মার্চ", sehri:"4:47", iftar:"6:16" },
-                { day:30, date:"20 মার্চ", sehri:"4:46", iftar:"6:16" }
-            ];
+            const audioURL = 'https://github.com/RidwanAhmed6/audioqalb-giveaway/raw/main/quran.mp3'; // আপনার আসল লিংক দিন
+            const audio = document.getElementById('bgAudio');
+            const playBtn = document.getElementById('playAudioBtn');
 
-            // --------------------------------------------------------------
-            // গ্লোবাল ভেরিয়েবল
-            // --------------------------------------------------------------
-            let currentDay = 1;      // ১-৩০
-            const audioPlayer = document.getElementById('quranAudio');
-            const playBtn = document.getElementById('playPauseBtn');
-            const ramadanStart = new Date(2026, 1, 19); // 19 Feb 2026
+            // পার্স টাইম "5:11 AM" -> hours, minutes
+            function parseTime(timeStr) {
+                const [t, mod] = timeStr.split(' ');
+                let [h, m] = t.split(':').map(Number);
+                if (mod === 'PM' && h !== 12) h += 12;
+                if (mod === 'AM' && h === 12) h = 0;
+                return { h, m };
+            }
 
-            // --------------------------------------------------------------
-            // হেল্পার ফাংশন
-            // --------------------------------------------------------------
+            // অফসেট যোগ করে সময় বের করা (আজকের তারিখে)
+            function getOffsetTime(baseTimeStr, offsetMin) {
+                const { h, m } = parseTime(baseTimeStr);
+                const date = new Date();
+                date.setHours(h, m, 0, 0);
+                date.setMinutes(date.getMinutes() + offsetMin);
+                return date;
+            }
+
+            // বাকি মিনিট
+            function getRemainingMinutes(targetDate) {
+                const now = new Date();
+                return Math.max(0, Math.floor((targetDate - now) / 60000));
+            }
+
+            // বাকি সময় ফরম্যাট
+            function formatRemaining(minutes) {
+                if (minutes <= 0) return 'সময় শেষ';
+                if (minutes < 60) return `${minutes} মি`;
+                const h = Math.floor(minutes / 60);
+                const m = minutes % 60;
+                return `${h} ঘ ${m} মি`;
+            }
+
+            // রমজানের দিন নির্ণয় (রিয়েল টাইম)
             function getCurrentRamadanDay() {
                 const today = new Date();
                 today.setHours(0,0,0,0);
-                const start = new Date(2026, 1, 19);
-                const end = new Date(2026, 2, 20);
+                const start = new Date(2026, 1, 19); // 19 Feb
+                const end = new Date(2026, 2, 20);   // 20 Mar
                 if (today < start) return 0;
                 if (today > end) return 30;
                 const diff = Math.floor((today - start) / (1000*60*60*24));
                 return diff + 1;
             }
 
-            // সময় স্ট্রিং-এ অফসেট যোগ (মিনিট)
-            function addOffset(timeStr, offsetMin) {
-                let [h, m] = timeStr.split(':').map(Number);
-                let total = h*60 + m + offsetMin;
-                if (total < 0) total += 1440;
-                if (total >= 1440) total -= 1440;
-                let nh = Math.floor(total/60);
-                let nm = total % 60;
-                return `${nh.toString().padStart(2,'0')}:${nm.toString().padStart(2,'0')}`;
-            }
-
-            // বিভাগ টেবিল আপডেট
-            function updateDivisionsTable() {
+            // টেবিল আপডেট
+            function updateTables() {
                 const day = getCurrentRamadanDay();
-                currentDay = day;
                 if (day < 1 || day > 30) {
-                    document.getElementById('divisionsTableBody').innerHTML = `<tr><td colspan="3">রমজান চলছে না</td></tr>`;
+                    document.getElementById('ramadanDay').innerText = day === 0 ? 'রমজান শুরু হয়নি' : 'রমজান শেষ';
+                    document.getElementById('iftarTableBody').innerHTML = '<tr><td colspan="3">--</td></tr>';
+                    document.getElementById('sehriTableBody').innerHTML = '<tr><td colspan="3">--</td></tr>';
                     return;
                 }
                 const base = baseSchedule[day-1];
-                let html = '';
+                document.getElementById('ramadanDay').innerHTML = `আজ ${day}তম রমজান (${base.date}, ${base.dayName})`;
+
+                let iftarRows = '', sehriRows = '';
                 divisions.forEach(div => {
-                    const sehri = addOffset(base.sehri, div.offsetSehri);
-                    const iftar = addOffset(base.iftar, div.offsetIftar);
-                    html += `<tr><td>${div.name}</td><td>${sehri}</td><td>${iftar}</td></tr>`;
+                    const iftarTime = getOffsetTime(base.iftar, div.offsetIftar);
+                    const sehriTime = getOffsetTime(base.sehri, div.offsetSehri);
+
+                    const iftarRem = getRemainingMinutes(iftarTime);
+                    const sehriRem = getRemainingMinutes(sehriTime);
+
+                    const iftarStr = iftarTime.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
+                    const sehriStr = sehriTime.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+                    iftarRows += `<tr><td>${div.name}</td><td class="remaining-time">${formatRemaining(iftarRem)}</td><td>${iftarStr}</td></tr>`;
+                    sehriRows += `<tr><td>${div.name}</td><td class="remaining-time">${formatRemaining(sehriRem)}</td><td>${sehriStr}</td></tr>`;
                 });
-                document.getElementById('divisionsTableBody').innerHTML = html;
+                document.getElementById('iftarTableBody').innerHTML = iftarRows;
+                document.getElementById('sehriTableBody').innerHTML = sehriRows;
             }
 
-            // কাউন্টডাউন আপডেট
-            function updateCountdown() {
+            // লাইভ ঘড়ি (ইংরেজিতে)
+            function updateClock() {
                 const now = new Date();
-                const target = new Date(2026, 1, 19, 0, 0, 0);
-                const diff = target - now;
-                if (diff <= 0) {
-                    document.getElementById('days').innerText = '00';
-                    document.getElementById('hours').innerText = '00';
-                    document.getElementById('minutes').innerText = '00';
-                    document.getElementById('seconds').innerText = '00';
-                } else {
-                    const days = Math.floor(diff / (1000*60*60*24));
-                    const hours = Math.floor((diff / (1000*60*60)) % 24);
-                    const minutes = Math.floor((diff / (1000*60)) % 60);
-                    const seconds = Math.floor((diff / 1000) % 60);
-                    document.getElementById('days').innerText = days.toString().padStart(2,'0');
-                    document.getElementById('hours').innerText = hours.toString().padStart(2,'0');
-                    document.getElementById('minutes').innerText = minutes.toString().padStart(2,'0');
-                    document.getElementById('seconds').innerText = seconds.toString().padStart(2,'0');
-                }
+                const timeStr = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                document.getElementById('liveClock').innerText = timeStr;
+                const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('liveDate').innerText = dateStr;
             }
 
-            // বাংলা তারিখ আপডেট
-            function updateBanglaDate() {
-                const d = new Date();
-                const months = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
-                document.getElementById('banglaDate').innerText = `আজ ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-            }
-
-            // কুরআন তথ্য আপডেট (পারা নম্বর ও অডিও সোর্স)
-            function updateQuran() {
-                const day = getCurrentRamadanDay();
-                if (day < 1 || day > 30) {
-                    document.getElementById('paraDisplay').innerText = 'আজকের পারা: --';
-                    return;
-                }
-                document.getElementById('paraDisplay').innerText = `আজকের পারা: ${day}`;
-                // অডিও সোর্স সেট (গিটহাব ফাইল প্যাটার্ন অনুযায়ী)
-                // audioPlayer.src = audioBaseURL + `para${day}.mp3`;
-            }
-
-            // স্বয়ংক্রিয় প্লে চেক (বিকাল ৪-৫)
-            function checkAutoPlay() {
-                const now = new Date();
-                const hours = now.getHours();
-                const day = getCurrentRamadanDay();
-                if (day >= 1 && day <= 30 && hours === 16) { // 4 PM
-                    if (audioPlayer.paused) {
-                        audioPlayer.play().catch(e => console.log('Auto play failed:', e));
-                    }
-                }
-            }
-
-            // প্লে বাটন ক্লিক
+            // অডিও বাটন
             playBtn.addEventListener('click', () => {
-                const day = getCurrentRamadanDay();
-                if (day < 1 || day > 30) {
-                    alert('রমজান চলছে না');
-                    return;
+                if (audio.paused) {
+                    audio.src = audioURL;
+                    audio.play().then(() => {
+                        playBtn.innerText = '⏸ বন্ধ';
+                    }).catch(() => {
+                        alert('অডিও চালানো যাচ্ছে না। লিংক চেক করুন।');
+                    });
+                } else {
+                    audio.pause();
+                    playBtn.innerText = '🔊 অডিও';
                 }
-                // এখানে প্রকৃত অডিও ফাইল লোড করে প্লে করতে হবে
-                 audioPlayer.src = audioBaseURL + `${day}.mp3`;
-                 audioPlayer.play();
-                alert('অডিও ফাইল গিটহাব থেকে লোড হবে। (নমুনা হিসেবে কাজ করছে না)');
             });
 
-            // স্লাইডশো ইনিশিয়ালাইজ
-            function initSlideshow() {
-                const container = document.getElementById('slideshow');
-                backgroundImages.forEach((src, idx) => {
-                    const div = document.createElement('div');
-                    div.className = `slide ${idx === 0 ? 'active' : ''}`;
-                    div.style.backgroundImage = `url('${src}')`;
-                    container.appendChild(div);
-                });
-                let current = 0;
-                setInterval(() => {
-                    const slides = document.querySelectorAll('.slide');
-                    slides[current].classList.remove('active');
-                    current = (current + 1) % slides.length;
-                    slides[current].classList.add('active');
-                }, 5000);
-            }
+            // প্রতি সেকেন্ডে আপডেট
+            setInterval(() => {
+                updateClock();
+                updateTables();
+            }, 1000);
 
-            // --------------------------------------------------------------
-            // পৃষ্ঠা লোড ও টাইমার
-            // --------------------------------------------------------------
-            window.onload = function() {
-                initSlideshow();
-                updateBanglaDate();
-                updateCountdown();
-                updateDivisionsTable();
-                updateQuran();
-
-                setInterval(() => {
-                    updateBanglaDate();
-                    updateCountdown();
-                    updateDivisionsTable(); // দিন পরিবর্তন হলে টেবিল আপডেট
-                    updateQuran();          // দিন পরিবর্তন হলে কুরআন তথ্য আপডেট
-                    checkAutoPlay();
-                }, 1000);
-            };
+            // প্রথমবার
+            updateClock();
+            updateTables();
         })();
     </script>
 </body>
