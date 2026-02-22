@@ -15,13 +15,13 @@
         body {
             background: #0a0f1e;
             display: flex;
+
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 10px;
         }
 
-        /* আইফোন ফ্রেম */
         .iphone-frame {
             width: 375px;
             height: 667px;
@@ -57,7 +57,6 @@
             border-radius: 8px;
         }
 
-        /* হেডার */
         .ramadan-header {
             text-align: center;
             background: rgba(0, 30, 30, 0.5);
@@ -81,7 +80,6 @@
             font-weight: bold;
         }
 
-        /* এক লাইনে ঘড়ি ও বাটন */
         .live-row {
             display: flex;
             align-items: center;
@@ -107,9 +105,16 @@
             color: #ffb347;
             margin-top: 2px;
         }
+
+        /* অডিও কন্ট্রোল সারি */
+        .audio-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
         .audio-control {
             flex: 1;
-            text-align: center;
         }
         .audio-btn {
             width: 100%;
@@ -126,8 +131,17 @@
             white-space: nowrap;
         }
         .audio-btn:active { transform: scale(0.96); }
+        .para-select {
+            flex: 1;
+            background: #0f2a33;
+            color: white;
+            border: 1.5px solid #f7c35c;
+            border-radius: 40px;
+            padding: 10px;
+            font-size: 0.9rem;
+            outline: none;
+        }
 
-        /* টেবিল সেকশন */
         .table-section {
             background: rgba(0, 35, 35, 0.6);
             border-radius: 30px;
@@ -168,7 +182,6 @@
             color: #ffb347;
         }
 
-        /* ফুটার */
         .footer {
             text-align: center;
             font-size: 0.65rem;
@@ -180,25 +193,29 @@
 <body>
     <div class="iphone-frame">
         <div class="content">
-            <!-- হেডার -->
             <div class="ramadan-header">
                 <h1>🌙 রমজান ২০২৬</h1>
                 <h2>বাংলাদেশের বিভাগ</h2>
                 <div class="ramadan-day" id="ramadanDay">আজ ১ম রমজান</div>
             </div>
 
-            <!-- এক লাইনে ঘড়ি ও বাটন -->
             <div class="live-row">
                 <div class="live-clock">
                     <div class="clock-time" id="liveClock">--:--:--</div>
                     <div class="clock-date" id="liveDate"></div>
                 </div>
+            </div>
+
+            <!-- অডিও নিয়ন্ত্রণ: বাটন + ড্রপডাউন -->
+            <div class="audio-row">
                 <div class="audio-control">
                     <button class="audio-btn" id="playAudioBtn">🔊 অডিও</button>
                 </div>
+                <select class="para-select" id="paraSelect">
+                    <!-- 1-30 অপশন জেনারেট হবে JS দিয়ে -->
+                </select>
             </div>
 
-            <!-- ইফতার টেবিল -->
             <div class="table-section">
                 <div class="table-title">🌇 ইফতার</div>
                 <div class="table-container">
@@ -209,7 +226,6 @@
                 </div>
             </div>
 
-            <!-- সেহরি টেবিল -->
             <div class="table-section">
                 <div class="table-title">🌅 সেহরি শেষ</div>
                 <div class="table-container">
@@ -227,13 +243,28 @@
         </div>
     </div>
 
-    <audio id="bgAudio" loop preload="auto">
+    <audio id="bgAudio" loop preload="none">
         <source src="" type="audio/mpeg">
     </audio>
 
     <script>
         (function() {
-            // =============== ইউজারের দেওয়া ঢাকার সময়সূচী (AM/PM ফরম্যাটে রূপান্তরিত) ===============
+            // =============== কনফিগারেশন ===============
+            // গিটহাব রসিদ (raw base URL)
+            const audioBaseURL = 'https://raw.githubusercontent.com/RidwanAhmed6/audioqalb-giveaway/main/';
+
+            const divisions = [
+                { name: 'ঢাকা', offsetSehri: 0, offsetIftar: 0 },
+                { name: 'চট্টগ্রাম', offsetSehri: -3, offsetIftar: -2 },
+                { name: 'রাজশাহী', offsetSehri: 4, offsetIftar: 5 },
+                { name: 'খুলনা', offsetSehri: 5, offsetIftar: 6 },
+                { name: 'বরিশাল', offsetSehri: 2, offsetIftar: 3 },
+                { name: 'সিলেট', offsetSehri: -2, offsetIftar: -1 },
+                { name: 'রংপুর', offsetSehri: 7, offsetIftar: 8 },
+                { name: 'ময়মনসিংহ', offsetSehri: 2, offsetIftar: 2 }
+            ];
+
+            // ইউজারের দেওয়া সময়সূচী (AM/PM সহ)
             const baseSchedule = [
                 { day:1, date:"১৯-০২-২০২৬", dayName:"বৃহস্পতিবার", sehri:"5:12 AM", iftar:"5:58 PM" },
                 { day:2, date:"২০-০২-২০২৬", dayName:"শুক্রবার", sehri:"5:11 AM", iftar:"5:58 PM" },
@@ -267,23 +298,22 @@
                 { day:30, date:"২০-০৩-২০২৬", dayName:"শুক্রবার", sehri:"4:47 AM", iftar:"6:11 PM" }
             ];
 
-            // বিভাগ ও অফসেট (মিনিট) – ঢাকার সাপেক্ষে
-            const divisions = [
-                { name: 'ঢাকা', offsetSehri: 0, offsetIftar: 0 },
-                { name: 'চট্টগ্রাম', offsetSehri: -3, offsetIftar: -2 },
-                { name: 'রাজশাহী', offsetSehri: 4, offsetIftar: 5 },
-                { name: 'খুলনা', offsetSehri: 5, offsetIftar: 6 },
-                { name: 'বরিশাল', offsetSehri: 2, offsetIftar: 3 },
-                { name: 'সিলেট', offsetSehri: -2, offsetIftar: -1 },
-                { name: 'রংপুর', offsetSehri: 7, offsetIftar: 8 },
-                { name: 'ময়মনসিংহ', offsetSehri: 2, offsetIftar: 2 }
-            ];
-
-            const audioURL = 'https://github.com/RidwanAhmed6/audioqalb-giveaway/raw/main/quran.mp3'; // আপনার আসল লিংক দিন
             const audio = document.getElementById('bgAudio');
             const playBtn = document.getElementById('playAudioBtn');
+            const paraSelect = document.getElementById('paraSelect');
+            let currentDay = 1;          // বর্তমান রমজান দিন (রিয়েল টাইম)
+            let autoPlayActive = true;    // অটো প্লে সক্রিয় কিনা (ম্যানুয়ালে বন্ধ হবে)
+            let manualDay = null;          // ম্যানুয়ালি নির্বাচিত দিন
 
-            // পার্স টাইম "5:11 AM" -> hours, minutes
+            // ড্রপডাউনে ১-৩০ অপশন
+            for (let i = 1; i <= 30; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `${i}ম পারা`;
+                paraSelect.appendChild(option);
+            }
+
+            // হেল্পার ফাংশন: টাইম পার্স "5:12 AM" -> ঘণ্টা, মিনিট
             function parseTime(timeStr) {
                 const [t, mod] = timeStr.split(' ');
                 let [h, m] = t.split(':').map(Number);
@@ -292,7 +322,7 @@
                 return { h, m };
             }
 
-            // অফসেট যোগ করে সময় বের করা (আজকের তারিখে)
+            // অফসেট যোগ করে আজকের সময় বের করা
             function getOffsetTime(baseTimeStr, offsetMin) {
                 const { h, m } = parseTime(baseTimeStr);
                 const date = new Date();
@@ -307,7 +337,7 @@
                 return Math.max(0, Math.floor((targetDate - now) / 60000));
             }
 
-            // বাকি সময় ফরম্যাট
+            // ফরম্যাট
             function formatRemaining(minutes) {
                 if (minutes <= 0) return 'সময় শেষ';
                 if (minutes < 60) return `${minutes} মি`;
@@ -316,12 +346,12 @@
                 return `${h} ঘ ${m} মি`;
             }
 
-            // রমজানের দিন নির্ণয় (রিয়েল টাইম)
+            // রমজান দিন নির্ণয়
             function getCurrentRamadanDay() {
                 const today = new Date();
                 today.setHours(0,0,0,0);
-                const start = new Date(2026, 1, 19); // 19 Feb
-                const end = new Date(2026, 2, 20);   // 20 Mar
+                const start = new Date(2026, 1, 19);
+                const end = new Date(2026, 2, 20);
                 if (today < start) return 0;
                 if (today > end) return 30;
                 const diff = Math.floor((today - start) / (1000*60*60*24));
@@ -331,6 +361,7 @@
             // টেবিল আপডেট
             function updateTables() {
                 const day = getCurrentRamadanDay();
+                currentDay = day;
                 if (day < 1 || day > 30) {
                     document.getElementById('ramadanDay').innerText = day === 0 ? 'রমজান শুরু হয়নি' : 'রমজান শেষ';
                     document.getElementById('iftarTableBody').innerHTML = '<tr><td colspan="3">--</td></tr>';
@@ -358,7 +389,7 @@
                 document.getElementById('sehriTableBody').innerHTML = sehriRows;
             }
 
-            // লাইভ ঘড়ি (ইংরেজিতে)
+            // লাইভ ঘড়ি (ইংরেজি)
             function updateClock() {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -367,10 +398,76 @@
                 document.getElementById('liveDate').innerText = dateStr;
             }
 
-            // অডিও বাটন
+            // অটো প্লে নিয়ন্ত্রণ
+            function autoPlayControl() {
+                const day = getCurrentRamadanDay();
+                if (day < 1 || day > 30) {
+                    // রমজান চলছে না, অডিও বন্ধ
+                    if (!audio.paused) {
+                        audio.pause();
+                        playBtn.innerText = '🔊 অডিও';
+                    }
+                    return;
+                }
+
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+
+                // আজকের ইফতার সময় (ঢাকা) বের করি
+                const base = baseSchedule[day-1];
+                const iftarTimeObj = parseTime(base.iftar); // {h, m} PM
+                const iftarDate = new Date();
+                iftarDate.setHours(iftarTimeObj.h, iftarTimeObj.m, 0, 0);
+
+                // অটো প্লে সময়সীমা: বিকাল ৪:০০ থেকে ইফতার পর্যন্ত
+                const startAuto = new Date();
+                startAuto.setHours(16, 0, 0, 0); // 4:00 PM
+
+                const shouldPlay = (now >= startAuto && now < iftarDate);
+
+                if (shouldPlay && autoPlayActive) {
+                    // অটো প্লে চালু করা উচিত, যদি অডিও বন্ধ থাকে এবং ম্যানুয়াল না হয়
+                    if (audio.paused) {
+                        // দিন ঠিক আছে? যদি ম্যানুয়াল ডে সেট না থাকে তাহলে আজকের দিন
+                        const targetDay = manualDay !== null ? manualDay : day;
+                        const audioSrc = audioBaseURL + targetDay + '.mp3';
+                        if (audio.src !== audioSrc) {
+                            audio.src = audioSrc;
+                        }
+                        audio.play().then(() => {
+                            playBtn.innerText = '⏸ বন্ধ';
+                        }).catch(e => {
+                            console.log('Auto play failed:', e);
+                        });
+                    }
+                } else {
+                    // অটো প্লে বন্ধ করা উচিত, যদি অডিও চালু থাকে এবং অটো প্লে একটিভ থাকে
+                    if (!audio.paused && autoPlayActive) {
+                        audio.pause();
+                        playBtn.innerText = '🔊 অডিও';
+                    }
+                }
+            }
+
+            // ম্যানুয়াল প্লে বাটন
             playBtn.addEventListener('click', () => {
+                const day = getCurrentRamadanDay();
+                if (day < 1 || day > 30) {
+                    alert('রমজান চলছে না');
+                    return;
+                }
+
+                const selectedPara = parseInt(paraSelect.value); // 1-30
+                manualDay = selectedPara; // ম্যানুয়াল দিন সেট
+                autoPlayActive = false;   // অটো প্লে নিষ্ক্রিয়
+
+                const audioSrc = audioBaseURL + selectedPara + '.mp3';
+                if (audio.src !== audioSrc) {
+                    audio.src = audioSrc;
+                }
+
                 if (audio.paused) {
-                    audio.src = audioURL;
                     audio.play().then(() => {
                         playBtn.innerText = '⏸ বন্ধ';
                     }).catch(() => {
@@ -382,10 +479,19 @@
                 }
             });
 
+            // ড্রপডাউন পরিবর্তন হলে অটো প্লে বন্ধ এবং ম্যানুয়াল ডে সেট
+            paraSelect.addEventListener('change', () => {
+                manualDay = parseInt(paraSelect.value);
+                autoPlayActive = false;
+                // যদি অডিও বন্ধ থাকে, তবে কিছু করি না; বাটন চাপলে প্লে হবে
+                // কিন্তু চাইলে এখানে অটো প্লে বন্ধ করে দেওয়া আছে
+            });
+
             // প্রতি সেকেন্ডে আপডেট
             setInterval(() => {
                 updateClock();
                 updateTables();
+                autoPlayControl();
             }, 1000);
 
             // প্রথমবার
