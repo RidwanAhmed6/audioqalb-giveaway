@@ -140,53 +140,62 @@
             outline: none;
         }
 
-        /* সাধারণ টেবিল স্টাইল (পোর্ট্রেট) */
-        .table-section {
+        /* দুই কলাম গ্রিড (সবসময়) */
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .grid-col {
             background: rgba(0, 35, 35, 0.6);
-            border-radius: 30px;
-            padding: 15px;
-            margin-bottom: 20px;
+            border-radius: 25px;
+            padding: 12px;
             border: 1.5px solid #f7c35c;
         }
-        .table-title {
-            font-size: 1.3rem;
+        .grid-col h4 {
+            text-align: center;
             color: #ffdb9d;
-            text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #f7c35c;
+            padding-bottom: 5px;
+        }
+        .division-row {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,200,100,0.2);
+            font-size: 0.9rem;
         }
-        .table-container {
-            overflow-x: auto;
+        .division-row:last-child {
+            border-bottom: none;
         }
-        .time-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
+        .div-name {
+            font-weight: 600;
+            color: #ffdb9d;
+            min-width: 70px;
         }
-        .time-table th {
-            background: #f7c35c;
-            color: #0a1a1a;
-            padding: 8px 3px;
+        .div-time {
+            text-align: right;
+            min-width: 60px;
         }
-        .time-table td {
-            padding: 8px 3px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,200,100,0.3);
-        }
-        .remaining-time {
+        .div-remaining {
             font-weight: bold;
             color: #ffb347;
+            min-width: 50px;
+            text-align: center;
         }
 
-        /* ল্যান্ডস্কেপের জন্য ডুয়াল-কলাম গ্রিড (ডিফল্টে লুকানো) */
-        .landscape-grid {
-            display: none;
+        .footer {
+            text-align: center;
+            font-size: 0.65rem;
+            color: #ffdb9d;
+            margin-top: 5px;
         }
 
-        /* ল্যান্ডস্কেপ মোডে আইফোন ফ্রেমের পুরো স্ক্রিন ব্যবহার */
+        /* ল্যান্ডস্কেপে ফন্ট সাইজ বড় */
         @media (orientation: landscape) and (max-height: 500px) {
             .iphone-frame {
                 width: 100vw;
@@ -197,64 +206,12 @@
             .content {
                 padding: 10px;
             }
-            /* পোর্ট্রেট টেবিল লুকাও */
-            .table-section .time-table {
-                display: none;
+            .clock-time {
+                font-size: 2rem;
             }
-            /* গ্রিড দেখাও */
-            .landscape-grid {
-                display: block;
-            }
-            .landscape-grid .dual-col {
-                display: flex;
-                gap: 15px;
-                margin-top: 10px;
-            }
-            .landscape-grid .col {
-                flex: 1;
-                background: rgba(0, 35, 35, 0.6);
-                border-radius: 20px;
-                padding: 12px;
-                border: 1.5px solid #f7c35c;
-            }
-            .landscape-grid .col h4 {
-                text-align: center;
-                color: #ffdb9d;
-                margin-bottom: 8px;
+            .division-row {
                 font-size: 1rem;
             }
-            .landscape-grid .col table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 0.75rem;
-            }
-            .landscape-grid .col th {
-                background: #f7c35c;
-                color: #0a1a1a;
-                padding: 5px 2px;
-            }
-            .landscape-grid .col td {
-                padding: 5px 2px;
-                text-align: center;
-                border-bottom: 1px solid rgba(255,200,100,0.3);
-            }
-            .landscape-grid .remaining-time {
-                font-weight: bold;
-                color: #ffb347;
-            }
-            .live-clock .clock-time {
-                font-size: 1.5rem;
-            }
-            .ramadan-header h1 {
-                font-size: 1.5rem;
-            }
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 0.65rem;
-            color: #ffdb9d;
-            margin-top: 5px;
         }
     </style>
 </head>
@@ -281,28 +238,28 @@
                 <select class="para-select" id="paraSelect"></select>
             </div>
 
-            <!-- ইফতার ও সেহরি টেবিল (পোর্ট্রেট) -->
-            <div class="table-section">
-                <div class="table-title">🌇 ইফতার</div>
-                <div class="table-container">
-                    <table class="time-table" id="iftarTable">
-                        <thead><tr><th>বিভাগ</th><th>বাকি সময়</th><th>ইফতার</th></tr></thead>
-                        <tbody id="iftarTableBody"></tbody>
-                    </table>
+            <!-- ইফতার সেকশন (দুই কলাম) -->
+            <div class="two-col-grid" id="iftarGrid">
+                <div class="grid-col" id="iftarCol1">
+                    <h4>🌇 ইফতার</h4>
+                    <div id="iftarCol1Rows"></div>
                 </div>
-                <!-- ল্যান্ডস্কেপ গ্রিড (ডাইনামিক ডাটা) -->
-                <div class="landscape-grid" id="iftarLandscape"></div>
+                <div class="grid-col" id="iftarCol2">
+                    <h4>🌇 ইফতার</h4>
+                    <div id="iftarCol2Rows"></div>
+                </div>
             </div>
 
-            <div class="table-section">
-                <div class="table-title">🌅 সেহরি শেষ</div>
-                <div class="table-container">
-                    <table class="time-table" id="sehriTable">
-                        <thead><tr><th>বিভাগ</th><th>বাকি সময়</th><th>সেহরি</th></tr></thead>
-                        <tbody id="sehriTableBody"></tbody>
-                    </table>
+            <!-- সেহরি সেকশন (দুই কলাম) -->
+            <div class="two-col-grid" id="sehriGrid">
+                <div class="grid-col" id="sehriCol1">
+                    <h4>🌅 সেহরি শেষ</h4>
+                    <div id="sehriCol1Rows"></div>
                 </div>
-                <div class="landscape-grid" id="sehriLandscape"></div>
+                <div class="grid-col" id="sehriCol2">
+                    <h4>🌅 সেহরি শেষ</h4>
+                    <div id="sehriCol2Rows"></div>
+                </div>
             </div>
 
             <div class="footer">
@@ -418,47 +375,24 @@
                 return diff + 1;
             }
 
-            // ল্যান্ডস্কেপ গ্রিড রেন্ডার ফাংশন
-            function renderLandscapeGrid(containerId, dataRows, title) {
-                const container = document.getElementById(containerId);
-                if (!container) return;
-                const half = Math.ceil(dataRows.length / 2);
-                const firstCol = dataRows.slice(0, half);
-                const secondCol = dataRows.slice(half);
-
-                let html = `<div class="dual-col">`;
-                // প্রথম কলাম
-                html += `<div class="col"><h4>${title}</h4><table><tr><th>বিভাগ</th><th>বাকি</th><th>সময়</th></tr>`;
-                firstCol.forEach(row => {
-                    html += `<tr><td>${row.name}</td><td class="remaining-time">${row.rem}</td><td>${row.time}</td></tr>`;
-                });
-                html += `</table></div>`;
-                // দ্বিতীয় কলাম
-                html += `<div class="col"><h4>${title}</h4><table><tr><th>বিভাগ</th><th>বাকি</th><th>সময়</th></tr>`;
-                secondCol.forEach(row => {
-                    html += `<tr><td>${row.name}</td><td class="remaining-time">${row.rem}</td><td>${row.time}</td></tr>`;
-                });
-                html += `</table></div>`;
-                html += `</div>`;
-                container.innerHTML = html;
-            }
-
-            function updateTables() {
+            // দুই কলাম আপডেট ফাংশন
+            function updateGrids() {
                 const day = getCurrentRamadanDay();
                 if (day < 1 || day > 30) {
                     document.getElementById('ramadanDay').innerText = day === 0 ? 'রমজান শুরু হয়নি' : 'রমজান শেষ';
-                    document.getElementById('iftarTableBody').innerHTML = '<tr><td colspan="3">--</td></tr>';
-                    document.getElementById('sehriTableBody').innerHTML = '<tr><td colspan="3">--</td></tr>';
-                    // ল্যান্ডস্কেপ গ্রিডও ক্লিয়ার
-                    document.getElementById('iftarLandscape').innerHTML = '';
-                    document.getElementById('sehriLandscape').innerHTML = '';
+                    document.getElementById('iftarCol1Rows').innerHTML = '<div class="division-row">--</div>';
+                    document.getElementById('iftarCol2Rows').innerHTML = '<div class="division-row">--</div>';
+                    document.getElementById('sehriCol1Rows').innerHTML = '<div class="division-row">--</div>';
+                    document.getElementById('sehriCol2Rows').innerHTML = '<div class="division-row">--</div>';
                     return;
                 }
+
                 const base = baseSchedule[day-1];
                 document.getElementById('ramadanDay').innerHTML = `আজ ${day}তম রমজান (${base.date}, ${base.dayName})`;
 
-                let iftarRows = '', sehriRows = '';
-                let iftarData = [], sehriData = [];
+                // ইফতার ও সেহরির ডাটা তৈরি
+                let iftarData = [];
+                let sehriData = [];
 
                 divisions.forEach(div => {
                     const iftarTime = getOffsetTime(base.iftar, div.offsetIftar);
@@ -470,21 +404,40 @@
                     const iftarStr = iftarTime.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
                     const sehriStr = sehriTime.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-                    // পোর্ট্রেট টেবিলের জন্য
-                    iftarRows += `<tr><td>${div.name}</td><td class="remaining-time">${formatRemaining(iftarRem)}</td><td>${iftarStr}</td></tr>`;
-                    sehriRows += `<tr><td>${div.name}</td><td class="remaining-time">${formatRemaining(sehriRem)}</td><td>${sehriStr}</td></tr>`;
-
-                    // ল্যান্ডস্কেপ গ্রিডের জন্য ডাটা সংগ্রহ
-                    iftarData.push({ name: div.name, rem: formatRemaining(iftarRem), time: iftarStr });
-                    sehriData.push({ name: div.name, rem: formatRemaining(sehriRem), time: sehriStr });
+                    iftarData.push({
+                        name: div.name,
+                        rem: formatRemaining(iftarRem),
+                        time: iftarStr
+                    });
+                    sehriData.push({
+                        name: div.name,
+                        rem: formatRemaining(sehriRem),
+                        time: sehriStr
+                    });
                 });
 
-                document.getElementById('iftarTableBody').innerHTML = iftarRows;
-                document.getElementById('sehriTableBody').innerHTML = sehriRows;
+                // প্রথম ৪টি ও শেষ ৪টি বিভাগ আলাদা
+                const half = 4;
+                const iftarFirst = iftarData.slice(0, half);
+                const iftarSecond = iftarData.slice(half);
+                const sehriFirst = sehriData.slice(0, half);
+                const sehriSecond = sehriData.slice(half);
 
-                // ল্যান্ডস্কেপ গ্রিড রেন্ডার
-                renderLandscapeGrid('iftarLandscape', iftarData, 'ইফতার');
-                renderLandscapeGrid('sehriLandscape', sehriData, 'সেহরি শেষ');
+                // HTML তৈরি
+                function renderRows(data) {
+                    return data.map(d => `
+                        <div class="division-row">
+                            <span class="div-name">${d.name}</span>
+                            <span class="div-remaining">${d.rem}</span>
+                            <span class="div-time">${d.time}</span>
+                        </div>
+                    `).join('');
+                }
+
+                document.getElementById('iftarCol1Rows').innerHTML = renderRows(iftarFirst);
+                document.getElementById('iftarCol2Rows').innerHTML = renderRows(iftarSecond);
+                document.getElementById('sehriCol1Rows').innerHTML = renderRows(sehriFirst);
+                document.getElementById('sehriCol2Rows').innerHTML = renderRows(sehriSecond);
             }
 
             function updateClock() {
@@ -570,12 +523,12 @@
 
             setInterval(() => {
                 updateClock();
-                updateTables();
+                updateGrids();
                 autoPlayControl();
             }, 1000);
 
             updateClock();
-            updateTables();
+            updateGrids();
         })();
     </script>
 </body>
