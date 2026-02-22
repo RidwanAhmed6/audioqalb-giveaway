@@ -15,7 +15,6 @@
         body {
             background: #0a0f1e;
             display: flex;
-
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -106,7 +105,6 @@
             margin-top: 2px;
         }
 
-        /* অডিও কন্ট্রোল সারি */
         .audio-row {
             display: flex;
             align-items: center;
@@ -142,6 +140,7 @@
             outline: none;
         }
 
+        /* সাধারণ টেবিল স্টাইল (পোর্ট্রেট) */
         .table-section {
             background: rgba(0, 35, 35, 0.6);
             border-radius: 30px;
@@ -182,6 +181,75 @@
             color: #ffb347;
         }
 
+        /* ল্যান্ডস্কেপের জন্য ডুয়াল-কলাম গ্রিড (ডিফল্টে লুকানো) */
+        .landscape-grid {
+            display: none;
+        }
+
+        /* ল্যান্ডস্কেপ মোডে আইফোন ফ্রেমের পুরো স্ক্রিন ব্যবহার */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .iphone-frame {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .content {
+                padding: 10px;
+            }
+            /* পোর্ট্রেট টেবিল লুকাও */
+            .table-section .time-table {
+                display: none;
+            }
+            /* গ্রিড দেখাও */
+            .landscape-grid {
+                display: block;
+            }
+            .landscape-grid .dual-col {
+                display: flex;
+                gap: 15px;
+                margin-top: 10px;
+            }
+            .landscape-grid .col {
+                flex: 1;
+                background: rgba(0, 35, 35, 0.6);
+                border-radius: 20px;
+                padding: 12px;
+                border: 1.5px solid #f7c35c;
+            }
+            .landscape-grid .col h4 {
+                text-align: center;
+                color: #ffdb9d;
+                margin-bottom: 8px;
+                font-size: 1rem;
+            }
+            .landscape-grid .col table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.75rem;
+            }
+            .landscape-grid .col th {
+                background: #f7c35c;
+                color: #0a1a1a;
+                padding: 5px 2px;
+            }
+            .landscape-grid .col td {
+                padding: 5px 2px;
+                text-align: center;
+                border-bottom: 1px solid rgba(255,200,100,0.3);
+            }
+            .landscape-grid .remaining-time {
+                font-weight: bold;
+                color: #ffb347;
+            }
+            .live-clock .clock-time {
+                font-size: 1.5rem;
+            }
+            .ramadan-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
         .footer {
             text-align: center;
             font-size: 0.65rem;
@@ -206,16 +274,14 @@
                 </div>
             </div>
 
-            <!-- অডিও নিয়ন্ত্রণ: বাটন + ড্রপডাউন -->
             <div class="audio-row">
                 <div class="audio-control">
                     <button class="audio-btn" id="playAudioBtn">🔊 অডিও</button>
                 </div>
-                <select class="para-select" id="paraSelect">
-                    <!-- 1-30 অপশন জেনারেট হবে JS দিয়ে -->
-                </select>
+                <select class="para-select" id="paraSelect"></select>
             </div>
 
+            <!-- ইফতার ও সেহরি টেবিল (পোর্ট্রেট) -->
             <div class="table-section">
                 <div class="table-title">🌇 ইফতার</div>
                 <div class="table-container">
@@ -224,6 +290,8 @@
                         <tbody id="iftarTableBody"></tbody>
                     </table>
                 </div>
+                <!-- ল্যান্ডস্কেপ গ্রিড (ডাইনামিক ডাটা) -->
+                <div class="landscape-grid" id="iftarLandscape"></div>
             </div>
 
             <div class="table-section">
@@ -234,6 +302,7 @@
                         <tbody id="sehriTableBody"></tbody>
                     </table>
                 </div>
+                <div class="landscape-grid" id="sehriLandscape"></div>
             </div>
 
             <div class="footer">
@@ -250,9 +319,7 @@
     <script>
         (function() {
             // =============== কনফিগারেশন ===============
-            // গিটহাব রসিদ (raw base URL)
             const audioBaseURL = 'https://raw.githubusercontent.com/RidwanAhmed6/audioqalb-giveaway/main/';
-
             const divisions = [
                 { name: 'ঢাকা', offsetSehri: 0, offsetIftar: 0 },
                 { name: 'চট্টগ্রাম', offsetSehri: -3, offsetIftar: -2 },
@@ -264,7 +331,6 @@
                 { name: 'ময়মনসিংহ', offsetSehri: 2, offsetIftar: 2 }
             ];
 
-            // ইউজারের দেওয়া সময়সূচী (AM/PM সহ)
             const baseSchedule = [
                 { day:1, date:"১৯-০২-২০২৬", dayName:"বৃহস্পতিবার", sehri:"5:12 AM", iftar:"5:58 PM" },
                 { day:2, date:"২০-০২-২০২৬", dayName:"শুক্রবার", sehri:"5:11 AM", iftar:"5:58 PM" },
@@ -301,11 +367,10 @@
             const audio = document.getElementById('bgAudio');
             const playBtn = document.getElementById('playAudioBtn');
             const paraSelect = document.getElementById('paraSelect');
-            let currentDay = 1;          // বর্তমান রমজান দিন (রিয়েল টাইম)
-            let autoPlayActive = true;    // অটো প্লে সক্রিয় কিনা (ম্যানুয়ালে বন্ধ হবে)
-            let manualDay = null;          // ম্যানুয়ালি নির্বাচিত দিন
+            let autoPlayActive = true;
+            let manualDay = null;
 
-            // ড্রপডাউনে ১-৩০ অপশন
+            // ড্রপডাউন পূর্ণ করুন
             for (let i = 1; i <= 30; i++) {
                 const option = document.createElement('option');
                 option.value = i;
@@ -313,7 +378,6 @@
                 paraSelect.appendChild(option);
             }
 
-            // হেল্পার ফাংশন: টাইম পার্স "5:12 AM" -> ঘণ্টা, মিনিট
             function parseTime(timeStr) {
                 const [t, mod] = timeStr.split(' ');
                 let [h, m] = t.split(':').map(Number);
@@ -322,7 +386,6 @@
                 return { h, m };
             }
 
-            // অফসেট যোগ করে আজকের সময় বের করা
             function getOffsetTime(baseTimeStr, offsetMin) {
                 const { h, m } = parseTime(baseTimeStr);
                 const date = new Date();
@@ -331,13 +394,11 @@
                 return date;
             }
 
-            // বাকি মিনিট
             function getRemainingMinutes(targetDate) {
                 const now = new Date();
                 return Math.max(0, Math.floor((targetDate - now) / 60000));
             }
 
-            // ফরম্যাট
             function formatRemaining(minutes) {
                 if (minutes <= 0) return 'সময় শেষ';
                 if (minutes < 60) return `${minutes} মি`;
@@ -346,7 +407,6 @@
                 return `${h} ঘ ${m} মি`;
             }
 
-            // রমজান দিন নির্ণয়
             function getCurrentRamadanDay() {
                 const today = new Date();
                 today.setHours(0,0,0,0);
@@ -358,20 +418,48 @@
                 return diff + 1;
             }
 
-            // টেবিল আপডেট
+            // ল্যান্ডস্কেপ গ্রিড রেন্ডার ফাংশন
+            function renderLandscapeGrid(containerId, dataRows, title) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                const half = Math.ceil(dataRows.length / 2);
+                const firstCol = dataRows.slice(0, half);
+                const secondCol = dataRows.slice(half);
+
+                let html = `<div class="dual-col">`;
+                // প্রথম কলাম
+                html += `<div class="col"><h4>${title}</h4><table><tr><th>বিভাগ</th><th>বাকি</th><th>সময়</th></tr>`;
+                firstCol.forEach(row => {
+                    html += `<tr><td>${row.name}</td><td class="remaining-time">${row.rem}</td><td>${row.time}</td></tr>`;
+                });
+                html += `</table></div>`;
+                // দ্বিতীয় কলাম
+                html += `<div class="col"><h4>${title}</h4><table><tr><th>বিভাগ</th><th>বাকি</th><th>সময়</th></tr>`;
+                secondCol.forEach(row => {
+                    html += `<tr><td>${row.name}</td><td class="remaining-time">${row.rem}</td><td>${row.time}</td></tr>`;
+                });
+                html += `</table></div>`;
+                html += `</div>`;
+                container.innerHTML = html;
+            }
+
             function updateTables() {
                 const day = getCurrentRamadanDay();
-                currentDay = day;
                 if (day < 1 || day > 30) {
                     document.getElementById('ramadanDay').innerText = day === 0 ? 'রমজান শুরু হয়নি' : 'রমজান শেষ';
                     document.getElementById('iftarTableBody').innerHTML = '<tr><td colspan="3">--</td></tr>';
                     document.getElementById('sehriTableBody').innerHTML = '<tr><td colspan="3">--</td></tr>';
+                    // ল্যান্ডস্কেপ গ্রিডও ক্লিয়ার
+                    document.getElementById('iftarLandscape').innerHTML = '';
+                    document.getElementById('sehriLandscape').innerHTML = '';
                     return;
                 }
                 const base = baseSchedule[day-1];
                 document.getElementById('ramadanDay').innerHTML = `আজ ${day}তম রমজান (${base.date}, ${base.dayName})`;
 
                 let iftarRows = '', sehriRows = '';
+                let iftarData = [], sehriData = [];
+
                 divisions.forEach(div => {
                     const iftarTime = getOffsetTime(base.iftar, div.offsetIftar);
                     const sehriTime = getOffsetTime(base.sehri, div.offsetSehri);
@@ -382,14 +470,23 @@
                     const iftarStr = iftarTime.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
                     const sehriStr = sehriTime.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
 
+                    // পোর্ট্রেট টেবিলের জন্য
                     iftarRows += `<tr><td>${div.name}</td><td class="remaining-time">${formatRemaining(iftarRem)}</td><td>${iftarStr}</td></tr>`;
                     sehriRows += `<tr><td>${div.name}</td><td class="remaining-time">${formatRemaining(sehriRem)}</td><td>${sehriStr}</td></tr>`;
+
+                    // ল্যান্ডস্কেপ গ্রিডের জন্য ডাটা সংগ্রহ
+                    iftarData.push({ name: div.name, rem: formatRemaining(iftarRem), time: iftarStr });
+                    sehriData.push({ name: div.name, rem: formatRemaining(sehriRem), time: sehriStr });
                 });
+
                 document.getElementById('iftarTableBody').innerHTML = iftarRows;
                 document.getElementById('sehriTableBody').innerHTML = sehriRows;
+
+                // ল্যান্ডস্কেপ গ্রিড রেন্ডার
+                renderLandscapeGrid('iftarLandscape', iftarData, 'ইফতার');
+                renderLandscapeGrid('sehriLandscape', sehriData, 'সেহরি শেষ');
             }
 
-            // লাইভ ঘড়ি (ইংরেজি)
             function updateClock() {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -398,11 +495,9 @@
                 document.getElementById('liveDate').innerText = dateStr;
             }
 
-            // অটো প্লে নিয়ন্ত্রণ
             function autoPlayControl() {
                 const day = getCurrentRamadanDay();
                 if (day < 1 || day > 30) {
-                    // রমজান চলছে না, অডিও বন্ধ
                     if (!audio.paused) {
                         audio.pause();
                         playBtn.innerText = '🔊 অডিও';
@@ -412,24 +507,18 @@
 
                 const now = new Date();
                 const hours = now.getHours();
-                const minutes = now.getMinutes();
-
-                // আজকের ইফতার সময় (ঢাকা) বের করি
                 const base = baseSchedule[day-1];
-                const iftarTimeObj = parseTime(base.iftar); // {h, m} PM
+                const iftarTimeObj = parseTime(base.iftar);
                 const iftarDate = new Date();
                 iftarDate.setHours(iftarTimeObj.h, iftarTimeObj.m, 0, 0);
 
-                // অটো প্লে সময়সীমা: বিকাল ৪:০০ থেকে ইফতার পর্যন্ত
                 const startAuto = new Date();
                 startAuto.setHours(16, 0, 0, 0); // 4:00 PM
 
                 const shouldPlay = (now >= startAuto && now < iftarDate);
 
                 if (shouldPlay && autoPlayActive) {
-                    // অটো প্লে চালু করা উচিত, যদি অডিও বন্ধ থাকে এবং ম্যানুয়াল না হয়
                     if (audio.paused) {
-                        // দিন ঠিক আছে? যদি ম্যানুয়াল ডে সেট না থাকে তাহলে আজকের দিন
                         const targetDay = manualDay !== null ? manualDay : day;
                         const audioSrc = audioBaseURL + targetDay + '.mp3';
                         if (audio.src !== audioSrc) {
@@ -437,12 +526,9 @@
                         }
                         audio.play().then(() => {
                             playBtn.innerText = '⏸ বন্ধ';
-                        }).catch(e => {
-                            console.log('Auto play failed:', e);
-                        });
+                        }).catch(e => console.log('Auto play failed:', e));
                     }
                 } else {
-                    // অটো প্লে বন্ধ করা উচিত, যদি অডিও চালু থাকে এবং অটো প্লে একটিভ থাকে
                     if (!audio.paused && autoPlayActive) {
                         audio.pause();
                         playBtn.innerText = '🔊 অডিও';
@@ -450,17 +536,15 @@
                 }
             }
 
-            // ম্যানুয়াল প্লে বাটন
             playBtn.addEventListener('click', () => {
                 const day = getCurrentRamadanDay();
                 if (day < 1 || day > 30) {
                     alert('রমজান চলছে না');
                     return;
                 }
-
-                const selectedPara = parseInt(paraSelect.value); // 1-30
-                manualDay = selectedPara; // ম্যানুয়াল দিন সেট
-                autoPlayActive = false;   // অটো প্লে নিষ্ক্রিয়
+                const selectedPara = parseInt(paraSelect.value);
+                manualDay = selectedPara;
+                autoPlayActive = false;
 
                 const audioSrc = audioBaseURL + selectedPara + '.mp3';
                 if (audio.src !== audioSrc) {
@@ -471,7 +555,7 @@
                     audio.play().then(() => {
                         playBtn.innerText = '⏸ বন্ধ';
                     }).catch(() => {
-                        alert('অডিও চালানো যাচ্ছে না। লিংক চেক করুন।');
+                        alert('অডিও চালানো যাচ্ছে না।');
                     });
                 } else {
                     audio.pause();
@@ -479,22 +563,17 @@
                 }
             });
 
-            // ড্রপডাউন পরিবর্তন হলে অটো প্লে বন্ধ এবং ম্যানুয়াল ডে সেট
             paraSelect.addEventListener('change', () => {
                 manualDay = parseInt(paraSelect.value);
                 autoPlayActive = false;
-                // যদি অডিও বন্ধ থাকে, তবে কিছু করি না; বাটন চাপলে প্লে হবে
-                // কিন্তু চাইলে এখানে অটো প্লে বন্ধ করে দেওয়া আছে
             });
 
-            // প্রতি সেকেন্ডে আপডেট
             setInterval(() => {
                 updateClock();
                 updateTables();
                 autoPlayControl();
             }, 1000);
 
-            // প্রথমবার
             updateClock();
             updateTables();
         })();
