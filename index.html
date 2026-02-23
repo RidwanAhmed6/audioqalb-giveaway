@@ -105,6 +105,7 @@
             margin-top: 2px;
         }
 
+        /* অডিও রো - এখন তিনটি আইটেম */
         .audio-row {
             display: flex;
             align-items: center;
@@ -139,6 +140,12 @@
             font-size: 0.9rem;
             outline: none;
         }
+        /* টগল বাটন বিশেষ স্টাইল */
+        #toggleChartBtn {
+            background: #4a6fa5;
+            color: white;
+            box-shadow: 0 2px 8px #2c3e50;
+        }
 
         /* দুই কলাম গ্রিড (সবসময়) */
         .two-col-grid {
@@ -146,7 +153,18 @@
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-top: 10px;
+            transition: transform 0.4s ease-in-out;
         }
+        /* ফ্লিপ এনিমেশন ক্লাস */
+        .flip-animation {
+            animation: flip 0.5s ease;
+        }
+        @keyframes flip {
+            0% { transform: perspective(400px) rotateY(0); }
+            50% { transform: perspective(400px) rotateY(90deg); opacity: 0.7; }
+            100% { transform: perspective(400px) rotateY(0); }
+        }
+
         .grid-col {
             background: rgba(0, 35, 35, 0.6);
             border-radius: 25px;
@@ -186,6 +204,7 @@
             color: #ffb347;
             min-width: 50px;
             text-align: center;
+            white-space: nowrap; /* যাতে সেকেন্ড সহ দেখায় */
         }
 
         .footer {
@@ -193,6 +212,19 @@
             font-size: 0.65rem;
             color: #ffdb9d;
             margin-top: 5px;
+        }
+        /* মারকিউ স্টাইল */
+        .dua-marquee {
+            background: #0f2a33;
+            border-radius: 30px;
+            padding: 8px 5px;
+            margin-top: 8px;
+            border: 1px solid #f7c35c;
+            font-size: 0.9rem;
+            color: #ffdb9d;
+        }
+        marquee {
+            font-weight: 500;
         }
 
         /* ল্যান্ডস্কেপে ফন্ট সাইজ বড় */
@@ -218,20 +250,24 @@
 <body>
     <div class="iphone-frame">
         <div class="content">
+
+            <!-- অডিও রো + নতুন টগল বাটন -->
+            <div class="audio-row">
+                <div class="audio-control">
+                    <button class="audio-btn" id="playAudioBtn">🔊 অডিও</button>
+                </div>
+                <select class="para-select" id="paraSelect"></select>
+                <div class="audio-control">
+                    <button class="audio-btn" id="toggleChartBtn">🔄 ইফতার/সেহরি</button>
+                </div>
+            </div>
+            
             <div class="ramadan-header">
                 <h1>🌙 রমজান ২০২৬</h1>
                 <h2>বাংলাদেশের বিভাগ</h2>
                 <div class="ramadan-day" id="ramadanDay">আজ ১ম রমজান</div>
             </div>
 
-            
-
-            <div class="audio-row">
-                <div class="audio-control">
-                    <button class="audio-btn" id="playAudioBtn">🔊 অডিও</button>
-                </div>
-                <select class="para-select" id="paraSelect"></select>
-            </div>
             <div class="live-row">
                 <div class="live-clock">
                     <div class="clock-time" id="liveClock">--:--:--</div>
@@ -242,11 +278,11 @@
             <!-- ইফতার সেকশন (দুই কলাম) -->
             <div class="two-col-grid" id="iftarGrid">
                 <div class="grid-col" id="iftarCol1">
-                    <h4>🌇 ইফতার সময় বাকি</h4>
+                    <h4>🌇 ইফতার সময় বাকি</h4>
                     <div id="iftarCol1Rows"></div>
                 </div>
                 <div class="grid-col" id="iftarCol2">
-                    <h4>🌇 ইফতার সময় বাকি</h4>
+                    <h4>🌇 ইফতার সময় বাকি</h4>
                     <div id="iftarCol2Rows"></div>
                 </div>
             </div>
@@ -254,16 +290,22 @@
             <!-- সেহরি সেকশন (দুই কলাম) -->
             <div class="two-col-grid" id="sehriGrid">
                 <div class="grid-col" id="sehriCol1">
-                    <h4>🌅 সেহরি শেষ</h4>
+                    <h4>🌅 সেহরি শেষ সময়</h4>
                     <div id="sehriCol1Rows"></div>
                 </div>
                 <div class="grid-col" id="sehriCol2">
-                    <h4>🌅 সেহরি শেষ</h4>
+                    <h4>🌅 সেহরি শেষ সময়</h4>
                     <div id="sehriCol2Rows"></div>
                 </div>
             </div>
 
             <div class="footer">
+                <!-- ফিক্সড মারকিউ যেখানে দোয়া ও প্রচার দেখাবে -->
+                <div class="dua-marquee">
+                    <marquee id="footerMarquee" behavior="scroll" direction="left" scrollamount="5" loop="infinite">
+                        🌙 আল্লাহুম্মা লাকা ছুমতু ওয়া আলা রিজক্বিকা আফতারতু। - আমাদের চ্যানেল সাবস্ক্রাইব করুন ও লাইভ শেয়ার করুন!
+                    </marquee>
+                </div>
                 <p>ইসলামিক ফাউন্ডেশন বাংলাদেশ এর তথ্য অনুযায়ী</p>
                 <p>অডিও: গিটহাব সংগ্রহ</p>
             </div>
@@ -336,6 +378,65 @@
                 paraSelect.appendChild(option);
             }
 
+            // =============== নতুন টগল ফাংশন ===============
+            const toggleBtn = document.getElementById('toggleChartBtn');
+            const iftarGrid = document.getElementById('iftarGrid');
+            const sehriGrid = document.getElementById('sehriGrid');
+            const marquee = document.getElementById('footerMarquee');
+
+            // চার্ট মোড: 'both', 'iftar', 'sehri'
+            let chartMode = 'both'; 
+
+            // দোয়া ও বার্তা
+            const IFTAR_DUA = "🌙 আল্লাহুম্মা লাকা ছুমতু ওয়া আলা রিজক্বিকা আফতারতু। - আমাদের চ্যানেল সাবস্ক্রাইব করুন ও লাইভ শেয়ার করুন!";
+            const SEHRI_DUA = "🌅 ওয়া বিসাওমি গাদ্দান নওয়াইতু মিন শাহরি রমাদান। - আমাদের চ্যানেল সাবস্ক্রাইব করুন ও লাইভ শেয়ার করুন!";
+
+            function updateChartVisibility(mode) {
+                if (mode === 'both') {
+                    iftarGrid.style.display = 'grid';
+                    sehriGrid.style.display = 'grid';
+                    marquee.innerText = IFTAR_DUA; // উভয় দেখালে ইফতারের দোয়া
+                } else if (mode === 'iftar') {
+                    iftarGrid.style.display = 'grid';
+                    sehriGrid.style.display = 'none';
+                    marquee.innerText = IFTAR_DUA;
+                } else if (mode === 'sehri') {
+                    iftarGrid.style.display = 'none';
+                    sehriGrid.style.display = 'grid';
+                    marquee.innerText = SEHRI_DUA;
+                }
+            }
+
+            // ফ্লিপ এনিমেশন ট্রিগার
+            function triggerFlip() {
+                [iftarGrid, sehriGrid].forEach(grid => {
+                    if (grid.style.display !== 'none') {
+                        grid.classList.add('flip-animation');
+                        setTimeout(() => {
+                            grid.classList.remove('flip-animation');
+                        }, 500);
+                    }
+                });
+            }
+
+            // টগল বাটন ক্লিক ইভেন্ট
+            toggleBtn.addEventListener('click', () => {
+                // চক্রাকারে mode পরিবর্তন: both -> iftar -> sehri -> both
+                if (chartMode === 'both') {
+                    chartMode = 'iftar';
+                } else if (chartMode === 'iftar') {
+                    chartMode = 'sehri';
+                } else {
+                    chartMode = 'both';
+                }
+                updateChartVisibility(chartMode);
+                triggerFlip();
+            });
+
+            // পৃষ্ঠা লোডে both মোড (ডিফল্ট) সেট করা আছে
+            updateChartVisibility('both');
+
+            // =============== আপডেট ফাংশন (সেকেন্ড সহ) ===============
             function parseTime(timeStr) {
                 const [t, mod] = timeStr.split(' ');
                 let [h, m] = t.split(':').map(Number);
@@ -352,17 +453,23 @@
                 return date;
             }
 
-            function getRemainingMinutes(targetDate) {
+            // সেকেন্ড বাকি বের করি
+            function getRemainingSeconds(targetDate) {
                 const now = new Date();
-                return Math.max(0, Math.floor((targetDate - now) / 60000));
+                return Math.max(0, Math.floor((targetDate - now) / 1000));
             }
 
-            function formatRemaining(minutes) {
-                if (minutes <= 0) return 'সময় শেষ';
-                if (minutes < 60) return `${minutes} মি`;
-                const h = Math.floor(minutes / 60);
-                const m = minutes % 60;
-                return `${h} ঘ ${m} মি`;
+            // সেকেন্ডকে ঘণ্টা, মিনিট, সেকেন্ডে ফরম্যাট
+            function formatRemainingSeconds(totalSeconds) {
+                if (totalSeconds <= 0) return 'সময় শেষ';
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                let result = '';
+                if (hours > 0) result += `${hours} ঘ `;
+                if (minutes > 0 || hours > 0) result += `${minutes} মি `;
+                result += `${seconds} সে`;
+                return result;
             }
 
             function getCurrentRamadanDay() {
@@ -376,7 +483,6 @@
                 return diff + 1;
             }
 
-            // দুই কলাম আপডেট ফাংশন
             function updateGrids() {
                 const day = getCurrentRamadanDay();
                 if (day < 1 || day > 30) {
@@ -391,7 +497,6 @@
                 const base = baseSchedule[day-1];
                 document.getElementById('ramadanDay').innerHTML = `আজ ${day}তম রমজান (${base.date}, ${base.dayName})`;
 
-                // ইফতার ও সেহরির ডাটা তৈরি
                 let iftarData = [];
                 let sehriData = [];
 
@@ -399,32 +504,30 @@
                     const iftarTime = getOffsetTime(base.iftar, div.offsetIftar);
                     const sehriTime = getOffsetTime(base.sehri, div.offsetSehri);
 
-                    const iftarRem = getRemainingMinutes(iftarTime);
-                    const sehriRem = getRemainingMinutes(sehriTime);
+                    const iftarRemSec = getRemainingSeconds(iftarTime);
+                    const sehriRemSec = getRemainingSeconds(sehriTime);
 
                     const iftarStr = iftarTime.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
                     const sehriStr = sehriTime.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', hour12: true });
 
                     iftarData.push({
                         name: div.name,
-                        rem: formatRemaining(iftarRem),
+                        rem: formatRemainingSeconds(iftarRemSec),
                         time: iftarStr
                     });
                     sehriData.push({
                         name: div.name,
-                        rem: formatRemaining(sehriRem),
+                        rem: formatRemainingSeconds(sehriRemSec),
                         time: sehriStr
                     });
                 });
 
-                // প্রথম ৪টি ও শেষ ৪টি বিভাগ আলাদা
                 const half = 4;
                 const iftarFirst = iftarData.slice(0, half);
                 const iftarSecond = iftarData.slice(half);
                 const sehriFirst = sehriData.slice(0, half);
                 const sehriSecond = sehriData.slice(half);
 
-                // HTML তৈরি
                 function renderRows(data) {
                     return data.map(d => `
                         <div class="division-row">
@@ -460,7 +563,6 @@
                 }
 
                 const now = new Date();
-                const hours = now.getHours();
                 const base = baseSchedule[day-1];
                 const iftarTimeObj = parseTime(base.iftar);
                 const iftarDate = new Date();
